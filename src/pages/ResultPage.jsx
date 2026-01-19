@@ -1,6 +1,20 @@
 import '../styles/resultPage.css';
 
-function ResultPage({ onReset }) {
+
+
+
+function ResultPage({ onReset, result }) {
+  // rayiç bedelini tahmini değerle aynı payloaddan alıyoruz
+  // min = tahmini - rayic_bedel * 0.005
+  // max = tahmini + rayic_bedel * 0.005
+  const tahmini = result?.tahmini ?? null;
+  const rayic = result?.rayic_bedel ?? null;
+  let min = '--';
+  let max = '--';
+  if (tahmini !== null && rayic !== null) {
+    min = Math.max(0, Math.round(tahmini - rayic * 0.005)) + ' ₺';
+    max = Math.round(tahmini + rayic * 0.005) + ' ₺';
+  }
   return (
     <div className="result-page">
       <div className="result-container">
@@ -20,15 +34,22 @@ function ResultPage({ onReset }) {
         </div>
 
         <div className="result-content">
-          <div className="result-grid">
-            <div className="result-card">
-              <span className="label">Minimum Değer Kaybı</span>
-              <span className="value">-- ₺</span>
+          <div className="result-main" style={{display:'flex', justifyContent:'center', marginBottom:'2rem'}}>
+            <div className="result-card" style={{minWidth:'260px', background:'#fff', borderRadius:'20px', boxShadow:'0 2px 12px rgba(0,0,0,0.07)', borderTop:'6px solid #ff9800', padding:'2.5rem 1rem', textAlign:'center'}}>
+              <span className="label" style={{fontWeight:'bold', color:'#1a2a3a', fontSize:'1.2rem'}}>TAHMİNİ DEĞER KAYBI</span>
+              <div className="value main" style={{fontSize:'2.8rem', fontWeight:'bold', color:'#1a2a3a', marginTop:'0.7rem'}}>
+                {tahmini !== null ? tahmini + ' ₺' : '-- ₺'}
+              </div>
             </div>
-
-            <div className="result-card">
-              <span className="label">Maksimum Değer Kaybı</span>
-              <span className="value">-- ₺</span>
+          </div>
+          <div className="result-grid" style={{display:'flex', gap:'2rem', justifyContent:'center'}}>
+            <div className="result-card" style={{minWidth:'220px', background:'#fff', borderRadius:'20px', boxShadow:'0 2px 12px rgba(0,0,0,0.07)', borderTop:'6px solid #ff9800', padding:'2rem 1rem', textAlign:'center'}}>
+              <span className="label" style={{fontWeight:'bold', color:'#1a2a3a', fontSize:'1.1rem'}}>MINIMUM DEĞER KAYBI</span>
+              <div className="value" style={{fontSize:'2.2rem', fontWeight:'bold', color:'#1a2a3a', marginTop:'0.5rem'}}>{min}</div>
+            </div>
+            <div className="result-card" style={{minWidth:'220px', background:'#fff', borderRadius:'20px', boxShadow:'0 2px 12px rgba(0,0,0,0.07)', borderTop:'6px solid #ff9800', padding:'2rem 1rem', textAlign:'center'}}>
+              <span className="label" style={{fontWeight:'bold', color:'#1a2a3a', fontSize:'1.1rem'}}>MAKSIMUM DEĞER KAYBI</span>
+              <div className="value" style={{fontSize:'2.2rem', fontWeight:'bold', color:'#1a2a3a', marginTop:'0.5rem'}}>{max}</div>
             </div>
           </div>
 
