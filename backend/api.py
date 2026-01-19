@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import pandas as pd
-from knn_optuna_model import KNNOptunaModel
+from backend.knn_optuna_model import KNNOptunaModel
 
 app = FastAPI()
 model = KNNOptunaModel()
