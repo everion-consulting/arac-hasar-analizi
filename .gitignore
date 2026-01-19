@@ -1,3 +1,5 @@
+# Büyük dosya GitHub'a gönderilmesin diye eklendi
+build/run_backend/run_backend.pkg
 # Logs
 logs
 *.log
@@ -22,3 +24,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+run_backend.pkg
