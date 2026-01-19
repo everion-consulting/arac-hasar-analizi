@@ -3,10 +3,13 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import pandas as pd
 from backend.knn_optuna_model import KNNOptunaModel
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 model = KNNOptunaModel()
 model.load_model('knn_optuna_model.pkl')
+
+app.mount("/", StaticFiles(directory="frontend_build", html=True), name="static")
 
 class PredictRequest(BaseModel):
     rayic_bedel: float

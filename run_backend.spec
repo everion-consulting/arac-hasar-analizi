@@ -5,7 +5,7 @@ a = Analysis(
     ['run_backend.py'],
     pathex=[],
     binaries=[],
-    datas=[('backend', 'backend')],
+    datas=[('backend', 'backend'), ('backend/frontend_build', 'backend/frontend_build')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
