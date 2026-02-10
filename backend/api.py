@@ -1,15 +1,28 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel
 import pandas as pd
 from backend.knn_optuna_model import KNNOptunaModel
 from fastapi.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
-model = KNNOptunaModel()
-model.load_model('knn_optuna_model.pkl')
 
-app.mount("/", StaticFiles(directory="frontend_build", html=True), name="static")
+# Kök URL'ye gelen istekleri otomatik olarak /static'e yönlendir
+@app.get("/")
+def root():
+    return RedirectResponse(url="/static")
+
+# Model load - backend klasöründeki pkl dosyasını bul
+script_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(script_dir, 'knn_optuna_model.pkl')
+
+model = KNNOptunaModel()
+model.load_model(model_path)
+
+# Frontend build path
+frontend_build_path = os.path.join(script_dir, 'frontend_build')
+app.mount("/static", StaticFiles(directory=frontend_build_path, html=True), name="static")
 
 class PredictRequest(BaseModel):
     rayic_bedel: float
@@ -63,14 +76,20 @@ async def predict(request: PredictRequest):
     df = pd.DataFrame([data])
     try:
         result = model.predict(df)
+        
         if isinstance(result, dict):
-            return {
+            # Debug info için katsayı bilgilerini response'a ekle
+            response = {
                 "min": round(result.get("min", 0), 2),
                 "max": round(result.get("max", 0), 2),
                 "tahmini": round(result.get("tahmin", 0), 2),
                 "uyari": result.get("uyari"),
-                "rayic_bedel": float(data.get("rayic_bedel", 0))
+                "rayic_bedel": float(data.get("rayic_bedel", 0)),
+                # Debug info
+                "katsayi_H_hasar": result.get("katsayi_H_hasar"),
+                "knn_baseline": result.get("knn_baseline"),
             }
+            return response
         tahmini = float(result[0]) if hasattr(result, '__getitem__') else float(result)
         min_val = tahmini * 0.9
         max_val = tahmini * 1.1

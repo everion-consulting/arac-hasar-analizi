@@ -1,27 +1,29 @@
-# Büyük dosya GitHub'a gönderilmesin diye eklendi
-build/run_backend/run_backend.pkg
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Python Sanal Ortamları (ASLA GÖNDERİLMEZ)
+venv/
+backend/venv/
+env/
+.env
 
-node_modules
-dist
-dist-ssr
+# Python Ön Bellek Dosyaları
+__pycache__/
+*.py[cod]
+
+# Exe Derleme Artıkları
+build/
+dist/
+dist.zip
+*.spec
+*.pkg
+
+# Node.js (Frontend bağımlılıkları)
+node_modules/
+dist-ssr/
 *.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-run_backend.pkg
+# Editör Ayarları
+.vscode/
+.idea/
+
+# Büyük Veri Dosyaları (Github sınırı 100MB'dir)
+# Eğer xlsx dosyanız çok büyük değilse kalabilir, büyükse başındaki # işaretini kaldırın
+# *.xlsx

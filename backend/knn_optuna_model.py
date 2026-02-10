@@ -19,19 +19,68 @@ def get_parca_katsayi(parca_kodu, islem_turu, hasar_seviyesi):
     try:
         return PARCA_KATSAYI_TABLOSU[parca_kodu][islem_turu][hasar_seviyesi]
     except Exception:
-        return 1.0  # Bulunamazsa nötr katsayı
-# Parça/işlem/hasar katsayı tablosu (örnek, tamamı doldurulmalı)
+        # Bulunamazsa default kullan
+        try:
+            return PARCA_KATSAYI_TABLOSU["default"][islem_turu][hasar_seviyesi]
+        except Exception:
+            return 0.75  # Son çare: ortalama katsayı
+# Parça/işlem/hasar katsayı tablosu (Devlet belgesi tablolarından)
 # Format: {"PARCA_KODU": {"degisim": {"hafif": katsayi, "orta": katsayi, "yuksek": katsayi}, "onarim": {"hafif": katsayi, ...}}}
 PARCA_KATSAYI_TABLOSU = {
-    "A.1": {
-        "degisim": {"hafif": 1.00, "orta": 1.00, "yuksek": 1.00},
-        "onarim": {"hafif": 1.00, "orta": 1.00, "yuksek": 1.00},
+    # Otomobil parçaları (A serisi)
+    "A.1": {  # TAVAN SACI
+        "degisim": {"hafif": 1.80, "orta": 2.00, "yuksek": 2.00},
+        "onarim": {"hafif": 1.30, "orta": 1.50, "yuksek": 1.80},
     },
-    "A.2": {
-        "degisim": {"hafif": 2.00, "orta": 2.00, "yuksek": 2.00},
-        "onarim": {"hafif": 2.00, "orta": 2.00, "yuksek": 2.00},
+    "A.2": {  # ÖN PANEL (SAÇ)
+        "degisim": {"hafif": 1.50, "orta": 1.80, "yuksek": 2.00},
+        "onarim": {"hafif": 1.00, "orta": 1.20, "yuksek": 1.50},
     },
-    # ... (Tüm parçalar ve katsayılar tabloya göre doldurulmalı)
+    "A.3": {  # SAĞ ÖN ÇAMURLUK (SAÇ)
+        "degisim": {"hafif": 0.80, "orta": 1.00, "yuksek": 1.20},
+        "onarim": {"hafif": 0.60, "orta": 0.80, "yuksek": 1.00},
+    },
+    "A.4": {  # SOL ÖN ÇAMURLUK (SAÇ)
+        "degisim": {"hafif": 0.80, "orta": 1.00, "yuksek": 1.20},
+        "onarim": {"hafif": 0.60, "orta": 0.80, "yuksek": 1.00},
+    },
+    "A.10": {  # MOTOR KAPUTU
+        "degisim": {"hafif": 0.60, "orta": 0.80, "yuksek": 1.00},
+        "onarim": {"hafif": 0.50, "orta": 0.75, "yuksek": 0.90},
+    },
+    "A.11": {  # SAĞ ÖN KAPI (KAPI SACI)
+        "degisim": {"hafif": 0.60, "orta": 0.80, "yuksek": 1.00},
+        "onarim": {"hafif": 0.40, "orta": 0.60, "yuksek": 0.80},
+    },
+    "A.12": {  # SOL ÖN KAPI (KAPI SACI)
+        "degisim": {"hafif": 0.60, "orta": 0.80, "yuksek": 1.00},
+        "onarim": {"hafif": 0.40, "orta": 0.60, "yuksek": 0.80},
+    },
+    "A.13": {  # SAĞ ARKA KAPI (KAPI SACI)
+        "degisim": {"hafif": 0.60, "orta": 0.80, "yuksek": 1.00},
+        "onarim": {"hafif": 0.40, "orta": 0.60, "yuksek": 0.80},
+    },
+    "A.14": {  # SOL ARKA KAPI (KAPI SACI)
+        "degisim": {"hafif": 0.60, "orta": 0.80, "yuksek": 1.00},
+        "onarim": {"hafif": 0.40, "orta": 0.60, "yuksek": 0.80},
+    },
+    "A.21": {  # BAGAJ KAPAĞI
+        "degisim": {"hafif": 0.60, "orta": 0.80, "yuksek": 1.00},
+        "onarim": {"hafif": 0.50, "orta": 0.70, "yuksek": 0.90},
+    },
+    "A.23": {  # SAĞ ARKA ÇAMURLUK
+        "degisim": {"hafif": 0.80, "orta": 1.00, "yuksek": 1.20},
+        "onarim": {"hafif": 0.60, "orta": 1.00, "yuksek": 1.20},
+    },
+    "A.24": {  # SOL ARKA ÇAMURLUK
+        "degisim": {"hafif": 0.80, "orta": 1.00, "yuksek": 1.20},
+        "onarim": {"hafif": 0.60, "orta": 1.00, "yuksek": 1.20},
+    },
+    # Default katsayılar (bulunamayanlar için)
+    "default": {
+        "degisim": {"hafif": 0.80, "orta": 1.00, "yuksek": 1.20},
+        "onarim": {"hafif": 0.50, "orta": 0.75, "yuksek": 1.00},
+    },
 }
 """
 KNN Model with Optuna Hyperparameter Optimization
@@ -153,6 +202,226 @@ def get_rayic_bin_idx(rayic_value):
         if min_val < rayic_value <= max_val:
             return bin_idx
     return 1
+
+
+# ============================================================================
+# DEVLET KATSAYILARı (2018 Sayılı Karayolları Trafik Kanunu - EK1)
+# ============================================================================
+
+def get_rayic_katsayisi(rayic_bedel, arac_grubu="A"):
+    """Devlet tablosuna göre Rayiç Değer Katsayısı (R)"""
+    if pd.isna(rayic_bedel):
+        return 0.65
+    
+    rayic = float(rayic_bedel)
+    
+    # Tablo R.1 (A, D) - Otomobil, İş makinesi, Traktör, Tarım makinesi, Tanker
+    if arac_grubu in ["A", "D"]:
+        if rayic <= 39999:
+            return 0.65
+        elif rayic <= 99999:
+            return 0.70
+        elif rayic <= 199999:
+            return 0.75
+        elif rayic <= 299999:
+            return 0.80
+        elif rayic <= 399999:
+            return 0.85
+        elif rayic <= 499999:
+            return 0.90
+        elif rayic <= 749999:
+            return 0.95
+        else:
+            return 1.00
+    
+    # Tablo R.2 (B, C, Ç, E) - Minibüs, Otobüs, Kamyonet, Kamyon, Çekici, Römork, Motorsiklet
+    else:
+        if rayic <= 249999:
+            return 0.65
+        elif rayic <= 349999:
+            return 0.70
+        elif rayic <= 499999:
+            return 0.75
+        elif rayic <= 749999:
+            return 0.80
+        elif rayic <= 999999:
+            return 0.85
+        elif rayic <= 1249999:
+            return 0.90
+        elif rayic <= 1499999:
+            return 0.95
+        else:
+            return 1.00
+
+
+def get_kilometre_katsayisi(kilometre, arac_grubu="A"):
+    """Devlet tablosuna göre Kilometre Katsayısı (K)"""
+    if pd.isna(kilometre):
+        return 1.00
+    
+    km = float(kilometre)
+    
+    # Tablo K.1 (A, F) - Otomobil, Motorsiklet, Özel amaçlı araç, Tanker
+    if arac_grubu in ["A", "F", "Ç"]:
+        if km < 20000:
+            return 1.00
+        elif km < 50000:
+            return 0.95
+        elif km < 100000:
+            return 0.90
+        elif km < 150000:
+            return 0.85
+        elif km < 200000:
+            return 0.80
+        elif km < 300000:
+            return 0.75
+        else:
+            return 0.70
+    
+    # Tablo K.2 (B, C, Ç, E) - Minibüs, Otobüs, Kamyonet, Kamyon, Çekici, Römork
+    elif arac_grubu in ["B", "C", "E"]:
+        if km < 50000:
+            return 1.00
+        elif km < 150000:
+            return 0.95
+        elif km < 300000:
+            return 0.90
+        elif km < 500000:
+            return 0.85
+        elif km < 750000:
+            return 0.80
+        elif km < 1000000:
+            return 0.75
+        else:
+            return 0.70
+    
+    # Tablo K.3 (D) - İş makinesi, Traktör (çalışma saati bazlı, ama km olarak da geçebilir)
+    else:
+        if km < 500:
+            return 1.00
+        elif km < 1000:
+            return 0.95
+        elif km < 2000:
+            return 0.90
+        elif km < 3000:
+            return 0.85
+        elif km < 4000:
+            return 0.80
+        elif km < 5000:
+            return 0.75
+        else:
+            return 0.70
+
+
+def get_hasar_katsayisi_basit(degisen_parca_sayisi, onarilan_parca_sayisi):
+    """Basitleştirilmiş Hasar Katsayısı (H) - parça sayılarına göre ortalama"""
+    degisen = float(degisen_parca_sayisi) if not pd.isna(degisen_parca_sayisi) else 0
+    onarilan = float(onarilan_parca_sayisi) if not pd.isna(onarilan_parca_sayisi) else 0
+    
+    # Toplam hasar katsayısı: Değişen tam, onarılan yarım ağırlık
+    total_hasar = (degisen * 1.0) + (onarilan * 0.5)
+    
+    # Makul bir aralıkta tutmak için cap koy (max 10)
+    if total_hasar > 10:
+        total_hasar = 10
+    
+    # Minimum 0.5 (en az bir parça varsa)
+    if total_hasar < 0.5 and (degisen > 0 or onarilan > 0):
+        total_hasar = 0.5
+    
+    return total_hasar
+
+
+def get_hasar_katsayisi_detayli(parca_katsayilari_list):
+    """Detaylı Hasar Katsayısı (H) - gerçek parça katsayılarına göre
+    
+    Args:
+        parca_katsayilari_list: Liste of dict with keys: parca_kodu, islem_turu, hasar_seviyesi
+    
+    Returns:
+        float: Toplam hasar katsayısı (parça katsayılarının toplamı)
+    """
+    if not parca_katsayilari_list or len(parca_katsayilari_list) == 0:
+        return 0.5  # Minimum katsayı
+    
+    total_katsayi = 0.0
+    
+    for parca_dict in parca_katsayilari_list:
+        parca_kodu = parca_dict.get('parca_kodu', '')
+        islem_turu = parca_dict.get('islem_turu', 'onarim')
+        hasar_seviyesi = parca_dict.get('hasar_seviyesi', 'orta')
+        
+        # get_parca_katsayi fonksiyonunu kullan
+        katsayi = get_parca_katsayi(parca_kodu, islem_turu, hasar_seviyesi)
+        total_katsayi += katsayi
+    
+    # Makul bir aralıkta tutmak için cap koy (max 10)
+    if total_katsayi > 10:
+        total_katsayi = 10
+    
+    # Minimum 0.5
+    if total_katsayi < 0.5:
+        total_katsayi = 0.5
+    
+    return total_katsayi
+
+
+def get_marka_model_carpan(marka, model):
+    """Marka/model segmentine göre çarpan (0.90-1.10 arası, çok küçük etki)"""
+    if pd.isna(marka):
+        return 1.0
+    
+    marka_str = str(marka).lower().strip()
+    model_str = str(model).lower().strip() if not pd.isna(model) else ""
+    
+    # Lüks araçlar: %8 daha fazla değer kaybı
+    luks_markalar = ["mercedes", "bmw", "audi", "porsche", "tesla", "jaguar", "land rover", 
+                     "lexus", "infiniti", "maserati", "ferrari", "lamborghini", "bentley", 
+                     "rolls-royce", "aston martin", "alpine", "lotus"]
+    for luks in luks_markalar:
+        if luks in marka_str:
+            return 1.08
+    
+    # Düşük segment: %8 daha az değer kaybı
+    dusuk_markalar = ["tofaş", "tofas", "lada", "proton"]
+    for dusuk in dusuk_markalar:
+        if dusuk in marka_str:
+            return 0.92
+    
+    # Ticari/Minibüs/Otobüs modelleri: %3 daha az (çalışma aracı)
+    ticari_modeller = ["doblo", "transit", "transporter", "sprinter", "jumpy", "boxer", 
+                       "vivaro", "caddy", "kangoo", "ducato", "master", "daily", "minibüs", 
+                       "minibus", "otobüs", "otobus", "kamyonet"]
+    for ticari in ticari_modeller:
+        if ticari in model_str:
+            return 0.97
+    
+    # Orta segment: nötr
+    return 1.0
+
+
+def get_arac_yasi_carpan(arac_yasi):
+    """Araç yaşı kategorisine göre çarpan (0.97-1.03 arası, çok küçük etki)"""
+    if pd.isna(arac_yasi):
+        return 1.0
+    
+    yas = float(arac_yasi)
+    
+    # 0-5 yaş: Yeni araçta değer kaybı biraz daha fazla (itibar kaybı)
+    if yas <= 5:
+        return 1.02
+    # 5-10 yaş: Orta, nötr
+    elif yas <= 10:
+        return 1.0
+    # 10-15 yaş: Biraz daha az
+    elif yas <= 15:
+        return 0.99
+    # 15-20 yaş: Daha az
+    elif yas <= 20:
+        return 0.98
+    # 20+ yaş: En az (eski araçta değer kaybı zaten düşük)
+    else:
+        return 0.97
 
 
 def get_rayic_bin_label(val):
@@ -714,6 +983,7 @@ class KNNOptunaModel:
         
         # Feature engineering
         df_input_processed = engineer_features(df_input_processed)
+
         
         # Inf temizliği
         df_input_processed = df_input_processed.replace([np.inf, -np.inf], np.nan)
@@ -768,6 +1038,81 @@ class KNNOptunaModel:
         )
         
         results.update(stats)
+        
+        # ============================================================================
+        # HİBRİD MODEL: KNN BASELINE + DEVLET KATSAYILARı
+        # ============================================================================
+        # KNN'den gelen tahmin (baseline)
+        knn_baseline = results['tahmin']
+        
+        # Input verilerini al
+        row = df_input_processed.iloc[0]
+        
+        # Araç grubunu belirle (minibüs/otobüs/ticari için farklı tablolar)
+        arac_grubu = "A"  # Default: Otomobil
+        if "marka" in row and not pd.isna(row["marka"]):
+            marka_lower = str(row["marka"]).lower()
+            model_lower = str(row.get("model", "")).lower() if "model" in row else ""
+            
+            # Ticari araç tespiti
+            ticari_keywords = ["kamyonet", "kamyon", "çekici", "tanker", "iş makinesi", 
+                              "traktör", "römork", "transit", "sprinter", "daily", "boxer", 
+                              "ducato", "master", "jumpy"]
+            if any(kw in marka_lower or kw in model_lower for kw in ticari_keywords):
+                arac_grubu = "C"  # Ticari
+            
+            # Minibüs/Otobüs tespiti
+            minibus_keywords = ["minibüs", "minibus", "otobüs", "otobus", "midibüs", "midibus"]
+            if any(kw in marka_lower or kw in model_lower for kw in minibus_keywords):
+                arac_grubu = "B"  # Minibüs/Otobüs
+        
+        # Devlet katsayılarını hesapla
+        R = get_rayic_katsayisi(row.get("rayic_bedel", rayic_val), arac_grubu)
+        K = get_kilometre_katsayisi(row.get("arac_kilometresi", 0), arac_grubu)
+        
+        # Hasar katsayısı: parca_katsayilari varsa detaylı, yoksa basit
+        if "parca_katsayilari" in row:
+            parca_list = row["parca_katsayilari"]
+            # parca_list bir liste dict olmalı ve boş olmamalı
+            if isinstance(parca_list, list) and len(parca_list) > 0:
+                H_raw = get_hasar_katsayisi_detayli(parca_list)
+            else:
+                H_raw = get_hasar_katsayisi_basit(
+                    row.get("degisen_parca_sayisi", 0),
+                    row.get("onarilan_parca_sayisi", 0)
+                )
+        else:
+            H_raw = get_hasar_katsayisi_basit(
+                row.get("degisen_parca_sayisi", 0),
+                row.get("onarilan_parca_sayisi", 0)
+            )
+        
+        # H normalize et (çarpımsal patlamayı önle)
+        H = 1.0 + (H_raw / 10.0)  # Örnek: 5 parça → 1.5x
+        
+        # Marka/model ve yaş çarpanları (çok küçük etkiler)
+        marka_carpan = get_marka_model_carpan(
+            row.get("marka", ""),
+            row.get("model", "")
+        )
+        yas_carpan = get_arac_yasi_carpan(row.get("arac_yasi", 0))
+        
+        # HİBRİD FORMÜL: KNN baseline × Devlet katsayıları × Marka/Yaş çarpanları
+        adjusted_pred = knn_baseline * R * K * H * marka_carpan * yas_carpan
+        
+        # Negatif değerleri ve aşırı sonuçları engelle
+        if adjusted_pred < 0:
+            adjusted_pred = 0
+        
+        # Sonuçları güncelle
+        results['tahmin'] = adjusted_pred
+        results['knn_baseline'] = knn_baseline
+        results['katsayi_R_rayic'] = R
+        results['katsayi_K_kilometre'] = K
+        results['katsayi_H_hasar'] = H
+        results['carpan_marka_model'] = marka_carpan
+        results['carpan_arac_yasi'] = yas_carpan
+        results['carpim'] = R * K * H * marka_carpan * yas_carpan
         
         return results
     

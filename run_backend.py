@@ -1,5 +1,7 @@
 import os
 import sys
+import threading
+import webbrowser
 
 def show_error_and_wait(msg):
     print("\n[HATA] {}".format(msg))
@@ -28,6 +30,12 @@ try:
         os.chdir(backend_path)
         sys.path.insert(0, backend_path)
 
+    def open_browser():
+        import time
+        time.sleep(5)  # Sunucunun başlaması için bekleme (5 saniye)
+        webbrowser.open("http://127.0.0.1:8000")
+
+    threading.Thread(target=open_browser, daemon=True).start()
     uvicorn.run("api:app", host="127.0.0.1", port=8000, reload=False)
 except Exception as e:
     show_error_and_wait(str(e))
