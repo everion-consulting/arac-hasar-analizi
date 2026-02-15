@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: hasar
+      POSTGRES_USER: hasar
+      POSTGRES_PASSWORD: hasar
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    restart: always
+    command: gunicorn django_arac_hasar_backend.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SETTINGS_MODULE: django_arac_hasar_backend.settings
+      DJANGO_DEBUG: "False"
+      DB_NAME: hasar
+      DB_USER: hasar
+      DB_PASSWORD: hasar
+      DB_HOST: db
+      DB_PORT: "5432"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+
