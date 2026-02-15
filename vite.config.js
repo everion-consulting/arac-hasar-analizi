@@ -8,5 +8,8 @@ export default defineConfig({
     proxy: {
       '/predict': 'http://localhost:8000',
     },
+    watch: {
+      ignored: ['**/backend/**', '**/node_modules/**', '**/.git/**', '**/django_arac_hasar_backend/**'],
+    },
   },
 })
