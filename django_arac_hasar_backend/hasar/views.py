@@ -1,5 +1,5 @@
 import pandas as pd
-from django.contrib.auth import authenticate, login as django_login
+from django.contrib.auth import authenticate, login as django_login, logout as django_logout
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
@@ -184,3 +184,13 @@ def csrf(request):
     Frontend bu endpoint'e GET atarak csrftoken cookie'sini alır.
     """
     return Response({"csrfToken": get_token(request)})
+
+
+@api_view(["POST"])
+def logout(request):
+    """
+    Django session'ını sonlandırmak için güvenli logout endpoint'i.
+    CSRF korumalıdır, bu yüzden frontend X-CSRFToken header'ı ile çağırmalıdır.
+    """
+    django_logout(request)
+    return Response({"detail": "Çıkış yapıldı."})

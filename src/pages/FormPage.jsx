@@ -10,7 +10,7 @@ import Select from 'react-select';
 import { getCsrfToken } from '../utils/csrf';
 
 
-function FormPage({ onNext }) {
+function FormPage({ onNext, onLogout }) {
     const [form, setForm] = useState({
         birinci: '', ikinci: '', ucuncu: '',
         toplamHasar: '',
@@ -100,7 +100,7 @@ function FormPage({ onNext }) {
     return (
         <div className="form-page">
             <div className="form-container">
-                <div className="form-header">
+                <div className="form-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div className="brand-badge">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -108,10 +108,26 @@ function FormPage({ onNext }) {
                         </svg>
                         Profesyonel Değerlendirme
                     </div>
-                    <h1>Araç Hasar Analizi</h1>
-                    <p className="subtitle">
-                        Hızlı ve güvenilir hasar değerlendirmesi için bilgilerinizi girin
-                    </p>
+                    <div>
+                        <h1>Araç Hasar Analizi</h1>
+                        <p className="subtitle">
+                            Hızlı ve güvenilir hasar değerlendirmesi için bilgilerinizi girin
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={onLogout}
+                        style={{
+                            padding: '8px 16px',
+                            borderRadius: 999,
+                            border: '1px solid #ddd',
+                            background: '#fff',
+                            fontSize: 14,
+                            cursor: 'pointer',
+                        }}
+                    >
+                        Çıkış
+                    </button>
                 </div>
 
                 <div className="form-content">

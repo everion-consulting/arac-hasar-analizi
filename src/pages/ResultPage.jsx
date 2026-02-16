@@ -1,9 +1,6 @@
 import '../styles/resultPage.css';
 
-
-
-
-function ResultPage({ onReset, result }) {
+function ResultPage({ onReset, onLogout, result }) {
   // rayiç bedelini tahmini değerle aynı payloaddan alıyoruz
   // min = tahmini - rayic_bedel * 0.005
   // max = tahmini + rayic_bedel * 0.005
@@ -18,7 +15,7 @@ function ResultPage({ onReset, result }) {
   return (
     <div className="result-page">
       <div className="result-container">
-        <div className="result-header">
+        <div className="result-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div className="success-badge">
             <div className="success-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -27,10 +24,26 @@ function ResultPage({ onReset, result }) {
             </div>
             Analiz Tamamlandı
           </div>
-          <h1>Değerlendirme Sonucu</h1>
-          <p className="subtitle">
-            Girilen bilgilere göre hesaplanan tahmini değer kaybı aralığı
-          </p>
+          <div>
+            <h1>Değerlendirme Sonucu</h1>
+            <p className="subtitle">
+              Girilen bilgilere göre hesaplanan tahmini değer kaybı aralığı
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            style={{
+              padding: '8px 16px',
+              borderRadius: 999,
+              border: '1px solid #ddd',
+              background: '#fff',
+              fontSize: 14,
+              cursor: 'pointer',
+            }}
+          >
+            Çıkış
+          </button>
         </div>
 
         <div className="result-content">
