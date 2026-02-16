@@ -31,7 +31,14 @@ DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ['hasar.everionai.com', '31.210.67.253', 'localhost', '127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = ['https://hasar.everionai.com']
+CSRF_TRUSTED_ORIGINS = [
+    'https://hasar.everionai.com',
+    'http://hasar.everionai.com',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
 
 
 # Application definition
@@ -140,3 +147,13 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# Django REST Framework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}

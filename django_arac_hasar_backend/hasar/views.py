@@ -1,4 +1,5 @@
 import pandas as pd
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -8,6 +9,7 @@ from .serializers import PredictRequestSerializer
 from .services import get_knn_model
 
 
+@csrf_exempt
 @api_view(["POST"])
 def predict(request):
     """
