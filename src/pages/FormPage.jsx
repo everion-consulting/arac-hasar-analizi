@@ -131,19 +131,6 @@ function FormPage({ onNext, onLogout }) {
                             Hızlı ve güvenilir hasar değerlendirmesi için bilgilerinizi girin
                         </p>
                     </div>
-                    <button
-                        type="button"
-                        onClick={onLogout}
-                        style={{
-                            padding: '8px 16px',
-                            borderRadius: 999,
-                            border: '1px solid #ddd',
-                            background: '#fff',
-                            fontSize: 14,
-                            cursor: 'pointer',
-                        }}
-                    >
-                        Çıkış
                 </div>
 
                 <div className="form-content">
