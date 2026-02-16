@@ -27,18 +27,29 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
+# Ortam değişkeni ile kontrol: sunucuda DJANGO_DEBUG boş bırak, localde True yap.
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ['hasar.everionai.com', '31.210.67.253', 'localhost', '127.0.0.1']
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://hasar.everionai.com',
-    'http://hasar.everionai.com',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-]
+# CSRF / güvenlik ayarları:
+# - Production'da sadece HTTPS domainine güven
+# - Local geliştirmede Vite ve Django'ya HTTP üzerinden izin ver
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS = [
+        'http://hasar.everionai.com',
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://localhost:8000',
+        'http://127.0.0.1:8000',
+    ]
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+else:
+    CSRF_TRUSTED_ORIGINS = ['https://hasar.everionai.com']
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition

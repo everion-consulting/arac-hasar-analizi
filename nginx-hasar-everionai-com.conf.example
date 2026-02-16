@@ -11,8 +11,10 @@ server {
     # Statik dosyalar için (Django admin CSS/JS)
     location /static/ {
         alias /home/yzhasartahmin/arac-hasar-analizi/staticfiles/;
+        autoindex off;
         expires 30d;
         add_header Cache-Control "public, no-transform";
+        try_files $uri $uri/ =404;
     }
 
     # Frontend (Vite dev server veya build edilmiş dosyalar)
