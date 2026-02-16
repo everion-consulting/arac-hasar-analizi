@@ -99,8 +99,25 @@ function FormPage({ onNext, onLogout }) {
 
     return (
         <div className="form-page">
+            <button
+                type="button"
+                onClick={onLogout}
+                style={{
+                    position: 'absolute',
+                    top: 24,
+                    right: 24,
+                    padding: '8px 16px',
+                    borderRadius: 999,
+                    border: '1px solid #ddd',
+                    background: '#fff',
+                    fontSize: 14,
+                    cursor: 'pointer',
+                }}
+            >
+                Çıkış
+            </button>
             <div className="form-container">
-                <div className="form-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="form-header">
                     <div className="brand-badge">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -127,7 +144,6 @@ function FormPage({ onNext, onLogout }) {
                         }}
                     >
                         Çıkış
-                    </button>
                 </div>
 
                 <div className="form-content">
