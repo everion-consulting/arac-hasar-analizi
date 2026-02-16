@@ -106,15 +106,18 @@ function FormPage({ onNext, onLogout }) {
                     position: 'absolute',
                     top: 24,
                     right: 24,
-                    padding: '8px 16px',
+                    padding: '6px 14px',
                     borderRadius: 999,
-                    border: '1px solid #ddd',
-                    background: '#fff',
-                    fontSize: 14,
+                    border: 'none',
+                    background: '#e53935',
+                    color: '#fff',
+                    fontSize: 13,
+                    fontWeight: 600,
                     cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
                 }}
             >
-                Çıkış
+                Çıkış Yap
             </button>
             <div className="form-container">
                 <div className="form-header">
