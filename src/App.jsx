@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormPage from './pages/FormPage';
 import ResultPage from './pages/ResultPage';
 import LoginPage from './pages/LoginPage';
@@ -9,6 +9,13 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
     () => localStorage.getItem('isLoggedIn') === 'true'
   );
+
+  // Uygulama ilk yüklendiğinde CSRF cookie'sini al
+  useEffect(() => {
+    fetch('/auth/csrf', { credentials: 'include' }).catch(() => {
+      // sessizce geç; sadece cookie üretmek için çağırıyoruz
+    });
+  }, []);
 
   const handleNext = (res) => {
     setResult(res);

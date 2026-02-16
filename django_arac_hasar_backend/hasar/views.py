@@ -1,8 +1,10 @@
 import pandas as pd
-from django.contrib.auth import authenticate
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login as django_login
+from django.middleware.csrf import get_token
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from .models import FrontendUser, HasarTahmin
@@ -10,8 +12,8 @@ from .serializers import PredictRequestSerializer
 from .services import get_knn_model
 
 
-@csrf_exempt
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def frontend_login(request):
     """
     Normal frontend kullanıcıları için login endpoint'i.
@@ -42,8 +44,10 @@ def frontend_login(request):
             status=400,
         )
 
-    # Şimdilik sadece kimlik doğrulaması yapıyoruz ve başarılı bilgisini dönüyoruz.
-    # İhtiyaç olursa burada session veya token bazlı yapıya geçilebilir.
+    # Django session oluştur
+    django_login(request, auth_user)
+
+    # Giriş başarılı, özet bilgi dön
     return Response(
         {
             "detail": "Giriş başarılı.",
@@ -52,7 +56,6 @@ def frontend_login(request):
     )
 
 
-@csrf_exempt
 @api_view(["POST"])
 def predict(request):
     """
@@ -170,3 +173,14 @@ def predict(request):
         return Response(response_data)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+
+@ensure_csrf_cookie
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def csrf(request):
+    """
+    CSRF cookie üretmek için basit endpoint.
+    Frontend bu endpoint'e GET atarak csrftoken cookie'sini alır.
+    """
+    return Response({"csrfToken": get_token(request)})

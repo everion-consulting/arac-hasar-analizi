@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getCsrfToken } from '../utils/csrf';
 import '../styles/formPage.css';
 
 function LoginPage({ onLoginSuccess }) {
@@ -13,9 +14,14 @@ function LoginPage({ onLoginSuccess }) {
     setError(null);
 
     try {
+      const csrfToken = getCsrfToken();
       const response = await fetch('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken || '',
+        },
         body: JSON.stringify({ username, password }),
       });
 

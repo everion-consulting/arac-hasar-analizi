@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { ParcaSecimList } from '../components/ParcaSecimList';
 import { ARAC_TURU_LISTESI, MARKA_LISTESI, MODEL_LISTESI } from '../constants/partOptions';
 import Select from 'react-select';
+import { getCsrfToken } from '../utils/csrf';
 
 
 function FormPage({ onNext }) {
@@ -76,9 +77,14 @@ function FormPage({ onNext }) {
         };
         // Eğer arac_yasi ve parca_basi_hasar frontend'de hesaplanacaksa burada ekleyin
         try {
+            const csrfToken = getCsrfToken();
             const response = await fetch('/predict', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken || '',
+                },
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error('Sunucu hatası');
