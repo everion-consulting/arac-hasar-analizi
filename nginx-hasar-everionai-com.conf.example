@@ -1,0 +1,48 @@
+# Nginx configuration for hasar.everionai.com
+# Copy this file to /etc/nginx/sites-available/hasar.everionai.com
+# Then create symlink: sudo ln -s /etc/nginx/sites-available/hasar.everionai.com /etc/nginx/sites-enabled/
+# Test: sudo nginx -t
+# Restart: sudo systemctl restart nginx
+
+server {
+    listen 80;
+    server_name hasar.everionai.com;
+
+    # Statik dosyalar için (Django admin CSS/JS)
+    location /static/ {
+        alias /home/yzhasartahmin/arac-hasar-analizi/staticfiles/;
+        expires 30d;
+        add_header Cache-Control "public, no-transform";
+    }
+
+    # Frontend (Vite dev server veya build edilmiş dosyalar)
+    location / {
+        proxy_pass http://localhost:5173;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Backend API (Django)
+    location /api/ {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Admin panel
+    location /admin/ {
+        proxy_pass http://localhost:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
