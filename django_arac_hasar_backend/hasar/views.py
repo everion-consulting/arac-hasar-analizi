@@ -1,12 +1,55 @@
 import pandas as pd
+from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import HasarTahmin
+from .models import FrontendUser, HasarTahmin
 from .serializers import PredictRequestSerializer
 from .services import get_knn_model
+
+
+@csrf_exempt
+@api_view(["POST"])
+def frontend_login(request):
+    """
+    Normal frontend kullanıcıları için login endpoint'i.
+    - Django admin kullanıcılarından ayrı FrontendUser modelini kullanır.
+    - Sadece aktif FrontendUser kayıtlarının girişine izin verir.
+    """
+    username = request.data.get("username")
+    password = request.data.get("password")
+
+    if not username or not password:
+        return Response(
+            {"detail": "Kullanıcı adı ve şifre zorunludur."},
+            status=400,
+        )
+
+    # Önce Django'nun normal User modeline göre kimlik doğrulaması yap
+    auth_user = authenticate(request, username=username, password=password)
+    if auth_user is None or not auth_user.is_active:
+        return Response(
+            {"detail": "Geçersiz kullanıcı adı veya şifre."},
+            status=400,
+        )
+
+    # Bu kullanıcı aynı zamanda FrontendUser tablosunda tanımlı mı (ayrı rol)?
+    if not FrontendUser.objects.filter(username=auth_user.username, is_active=True).exists():
+        return Response(
+            {"detail": "Geçersiz kullanıcı adı veya şifre."},
+            status=400,
+        )
+
+    # Şimdilik sadece kimlik doğrulaması yapıyoruz ve başarılı bilgisini dönüyoruz.
+    # İhtiyaç olursa burada session veya token bazlı yapıya geçilebilir.
+    return Response(
+        {
+            "detail": "Giriş başarılı.",
+            "username": auth_user.username,
+        }
+    )
 
 
 @csrf_exempt

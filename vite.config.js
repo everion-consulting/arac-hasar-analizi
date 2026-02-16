@@ -10,6 +10,7 @@ export default defineConfig({
     allowedHosts: ['hasar.everionai.com'],
     proxy: {
       '/predict': 'http://localhost:8000',
+      '/auth': 'http://localhost:8000',
     },
     watch: {
       ignored: ['**/backend/**', '**/node_modules/**', '**/.git/**', '**/django_arac_hasar_backend/**'],

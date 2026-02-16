@@ -14,7 +14,10 @@ services:
   web:
     build: .
     restart: always
-    command: gunicorn django_arac_hasar_backend.wsgi:application --bind 0.0.0.0:8000
+    # Container ayağa kalkarken önce migrate, sonra gunicorn çalışsın
+    command: >
+      sh -c "python django_arac_hasar_backend/manage.py migrate &&
+             gunicorn django_arac_hasar_backend.wsgi:application --bind 0.0.0.0:8000"
     ports:
       - "8000:8000"
     volumes:
