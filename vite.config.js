@@ -5,6 +5,9 @@ export default defineConfig({
   plugins: [react()],
   base: '/static/', 
   server: {
+    host: true,
+    port: 5173,
+    allowedHosts: ['hasar.everionai.com'],
     proxy: {
       '/predict': 'http://localhost:8000',
     },
