@@ -30,6 +30,12 @@ function ResultPage({ onReset, onLogout, result }) {
           fontWeight: 600,
           cursor: 'pointer',
           boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
+          width: 'auto',
+          minWidth: 'auto',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10,
         }}
       >
         Çıkış Yap
