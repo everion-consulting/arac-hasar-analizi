@@ -29,7 +29,9 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['hasar.everionai.com', '31.210.67.253', 'localhost', '127.0.0.1']
+
+CSRF_TRUSTED_ORIGINS = ['https://hasar.everionai.com']
 
 
 # Application definition
