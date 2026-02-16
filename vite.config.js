@@ -1,9 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// Vite config:
+// - Uygulama kökte (/ ) çalışır, base tanımlamıyoruz.
+// - Nginx, prod'da domain kökünü Vite'e (5173) proxy'ler.
+
 export default defineConfig({
   plugins: [react()],
-  base: '/static/', 
   server: {
     host: true,
     port: 5173,
@@ -17,3 +20,4 @@ export default defineConfig({
     },
   },
 })
+
