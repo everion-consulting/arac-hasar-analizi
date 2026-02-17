@@ -119,6 +119,12 @@ def predict(request):
     model = get_knn_model()
 
     try:
+        frontend_user = None
+        if request.user.is_authenticated:
+            frontend_user = FrontendUser.objects.filter(
+                username=request.user.username, is_active=True
+            ).first()
+
         result = model.predict(df)
 
         if isinstance(result, dict):
@@ -139,6 +145,7 @@ def predict(request):
         # DB'ye kaydet
         hasar = HasarTahmin.objects.create(
             user=request.user if request.user.is_authenticated else None,
+            frontend_user=frontend_user,
             rayic_bedel=data["rayic_bedel"],
             hasar_bedeli=data["hasar_bedeli"],
             degisen_parca_sayisi=data["degisen_parca_sayisi"],
@@ -205,9 +212,17 @@ def prediction_history(request):
     """
     if not request.user.is_authenticated:
         return Response({"detail": "Giriş yapmanız gerekiyor."}, status=401)
+
+    frontend_user = FrontendUser.objects.filter(
+        username=request.user.username, is_active=True
+    ).first()
+    if frontend_user is None:
+        return Response({"detail": "Frontend kullanıcı bulunamadı."}, status=400)
     
     # Kullanıcının tahminlerini tarihe göre sıralı getir
-    tahminler = HasarTahmin.objects.filter(user=request.user).order_by('-created_at')
+    tahminler = HasarTahmin.objects.filter(frontend_user=frontend_user).order_by(
+        "-created_at"
+    )
     
     # Serialize et
     history_data = []
@@ -229,6 +244,8 @@ def prediction_history(request):
         {
             "results": history_data,
             "count": len(history_data),
+            # Debug/izleme için ikisini de dönelim
             "user_id": request.user.id,
+            "frontend_user_id": frontend_user.id,
         }
     )

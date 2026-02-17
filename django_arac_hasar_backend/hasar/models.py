@@ -31,6 +31,15 @@ class FrontendUser(models.Model):
 class HasarTahmin(models.Model):
     # Kullanıcı bilgisi (opsiyonel - mevcut kayıtlar için null olabilir)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='hasar_tahminleri')
+
+    # Frontend kullanıcı bilgisi (asıl eşleştirme bununla yapılacak)
+    frontend_user = models.ForeignKey(
+        FrontendUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="tahminler",
+    )
     
     # Kullanıcının girdiği temel sayısal alanlar
     rayic_bedel = models.FloatField()
