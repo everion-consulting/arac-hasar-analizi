@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class FrontendUser(models.Model):
@@ -28,6 +29,9 @@ class FrontendUser(models.Model):
 
 
 class HasarTahmin(models.Model):
+    # Kullanıcı bilgisi (opsiyonel - mevcut kayıtlar için null olabilir)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='hasar_tahminleri')
+    
     # Kullanıcının girdiği temel sayısal alanlar
     rayic_bedel = models.FloatField()
     hasar_bedeli = models.FloatField()

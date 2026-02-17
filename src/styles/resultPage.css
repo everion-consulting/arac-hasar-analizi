@@ -38,10 +38,17 @@ body {
   padding: 0 8px;
 }
 
-.btn-logout {
+.btn-logout,
+.btn-history {
   width: auto !important;
   min-width: auto !important;
   display: inline-flex !important;
+}
+
+.btn-history:hover {
+  background: #5548e5 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 91, 255, 0.4) !important;
 }
 
 .result-header {
@@ -325,6 +332,13 @@ body {
   .secondary-btn {
     padding: 14px 24px;
     font-size: 15px;
+  }
+
+  .btn-history {
+    top: 12px !important;
+    left: 12px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
   }
 
   .btn-logout {

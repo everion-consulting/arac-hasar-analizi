@@ -138,6 +138,7 @@ def predict(request):
 
         # DB'ye kaydet
         hasar = HasarTahmin.objects.create(
+            user=request.user if request.user.is_authenticated else None,
             rayic_bedel=data["rayic_bedel"],
             hasar_bedeli=data["hasar_bedeli"],
             degisen_parca_sayisi=data["degisen_parca_sayisi"],
@@ -194,3 +195,34 @@ def logout(request):
     """
     django_logout(request)
     return Response({"detail": "Çıkış yapıldı."})
+
+
+@api_view(["GET"])
+def prediction_history(request):
+    """
+    Kullanıcının geçmiş tahminlerini getirir.
+    Sadece giriş yapmış kullanıcılar için çalışır.
+    """
+    if not request.user.is_authenticated:
+        return Response({"detail": "Giriş yapmanız gerekiyor."}, status=401)
+    
+    # Kullanıcının tahminlerini tarihe göre sıralı getir
+    tahminler = HasarTahmin.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Serialize et
+    history_data = []
+    for tahmin in tahminler:
+        history_data.append({
+            "id": tahmin.id,
+            "marka": tahmin.marka,
+            "model": tahmin.model,
+            "arac_turu": tahmin.arac_turu,
+            "tahmini": float(tahmin.tahmini) if tahmin.tahmini else None,
+            "min_deger": float(tahmin.min_deger) if tahmin.min_deger else None,
+            "max_deger": float(tahmin.max_deger) if tahmin.max_deger else None,
+            "rayic_bedel": float(tahmin.rayic_bedel),
+            "hasar_bedeli": float(tahmin.hasar_bedeli),
+            "created_at": tahmin.created_at.isoformat() if tahmin.created_at else None,
+        })
+    
+    return Response({"results": history_data, "count": len(history_data)})

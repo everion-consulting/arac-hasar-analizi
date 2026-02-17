@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import FormPage from './pages/FormPage';
 import ResultPage from './pages/ResultPage';
 import LoginPage from './pages/LoginPage';
+import HistoryPage from './pages/HistoryPage';
 import { getCsrfToken } from './utils/csrf';
 
 function App() {
   const [step, setStep] = useState(1);
   const [result, setResult] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(
     () => localStorage.getItem('isLoggedIn') === 'true'
   );
@@ -56,11 +58,25 @@ function App() {
     return <LoginPage onLoginSuccess={handleLoginSuccess} />;
   }
 
+  if (showHistory) {
+    return (
+      <HistoryPage
+        onBack={() => setShowHistory(false)}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
   return (
     <>
       {step === 1 && <FormPage onNext={handleNext} onLogout={handleLogout} />}
       {step === 2 && (
-        <ResultPage onReset={handleReset} onLogout={handleLogout} result={result} />
+        <ResultPage
+          onReset={handleReset}
+          onLogout={handleLogout}
+          onShowHistory={() => setShowHistory(true)}
+          result={result}
+        />
       )}
     </>
   );

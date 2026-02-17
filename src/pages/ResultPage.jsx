@@ -1,6 +1,6 @@
 import '../styles/resultPage.css';
 
-function ResultPage({ onReset, onLogout, result }) {
+function ResultPage({ onReset, onLogout, onShowHistory, result }) {
   // rayiç bedelini tahmini değerle aynı payloaddan alıyoruz
   // min = tahmini - rayic_bedel * 0.005
   // max = tahmini + rayic_bedel * 0.005
@@ -14,6 +14,37 @@ function ResultPage({ onReset, onLogout, result }) {
   }
   return (
     <div className="result-page">
+      <button
+        type="button"
+        className="btn-history"
+        onClick={onShowHistory}
+        style={{
+          position: 'absolute',
+          top: 24,
+          left: 24,
+          padding: '6px 14px',
+          borderRadius: 999,
+          border: 'none',
+          background: '#635bff',
+          color: '#fff',
+          fontSize: 13,
+          fontWeight: 600,
+          cursor: 'pointer',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
+          width: 'auto',
+          minWidth: 'auto',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '6px',
+          zIndex: 10,
+        }}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        Geçmiş
+      </button>
       <button
         type="button"
         className="btn-logout"
