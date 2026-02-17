@@ -15,7 +15,7 @@ function HistoryPage({ onBack, onLogout }) {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch('/predictions/history', {
+      const response = await fetch('/api/predictions/history', {
         method: 'GET',
         credentials: 'include',
         headers: {

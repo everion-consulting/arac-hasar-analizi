@@ -225,4 +225,10 @@ def prediction_history(request):
             "created_at": tahmin.created_at.isoformat() if tahmin.created_at else None,
         })
     
-    return Response({"results": history_data, "count": len(history_data)})
+    return Response(
+        {
+            "results": history_data,
+            "count": len(history_data),
+            "user_id": request.user.id,
+        }
+    )

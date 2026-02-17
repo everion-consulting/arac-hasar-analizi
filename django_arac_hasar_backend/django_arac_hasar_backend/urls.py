@@ -20,6 +20,8 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # Prod'da Nginx /api/ -> Django (8000) proxy'lediği için aynı endpoint'leri /api altında da sunuyoruz.
+    path("api/", include("hasar.urls")),
     # Frontend şu an /predict'e istek attığı için,
     # hasar.urls'i köke bağlıyoruz: /predict -> hasar.views.predict
     path("", include("hasar.urls")),
