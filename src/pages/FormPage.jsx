@@ -190,23 +190,10 @@ function FormPage({ onNext, onLogout }) {
                                 <div className="input-group">
                                     <label>Araç Türü <span className="required">*</span></label>
                                     <select
+                                        className="select-arac-turu"
                                         value={aracTuru}
                                         onChange={e => setAracTuru(e.target.value)}
                                         required
-                                        style={{
-                                            width: '100%',
-                                            padding: '14px 18px',
-                                            borderRadius: 10,
-                                            border: '1.5px solid #feb47b',
-                                            fontSize: 18,
-                                            background: '#fff',
-                                            marginTop: 4,
-                                            boxShadow: '0 2px 8px #feb47b22',
-                                            color: aracTuru ? '#222' : '#aaa',
-                                            fontWeight: 500,
-                                            outline: 'none',
-                                            transition: 'border 0.2s',
-                                        }}
                                     >
                                         <option value="">Araç Türü Seçiniz</option>
                                         {ARAC_TURU_LISTESI.map((tur, idx) => (

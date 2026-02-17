@@ -5,6 +5,8 @@
   gap: 8px;
   margin-bottom: 8px;
   flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .parca-secim-row select {
@@ -15,6 +17,9 @@
   background: #fff;
   flex: 1;
   min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .parca-secim-row select:first-of-type {
@@ -52,6 +57,9 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .parca-secim-list label {
@@ -75,7 +83,8 @@
   box-shadow: 0 2px 8px rgba(254, 180, 123, 0.3);
   transition: all 0.2s;
   width: 100%;
-  max-width: 300px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .parca-secim-list .btn-add-part:hover:not(:disabled) {
@@ -95,16 +104,23 @@
   .parca-secim-row {
     flex-direction: column;
     gap: 12px;
+    width: 100%;
   }
 
   .parca-secim-row select {
-    width: 100%;
+    width: 100% !important;
     min-width: 0 !important;
+    max-width: 100% !important;
+    flex: none;
   }
 
   .parca-secim-row .btn-remove {
     width: 100%;
     padding: 10px;
+  }
+
+  .parca-secim-list {
+    width: 100%;
   }
 
   .parca-secim-list .btn-add-part {
@@ -119,15 +135,23 @@
 @media (max-width: 480px) {
   .parca-secim-row {
     gap: 10px;
+    width: 100%;
   }
 
   .parca-secim-row select {
     font-size: 15px;
     padding: 10px 12px;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .parca-secim-list {
+    width: 100%;
   }
 
   .parca-secim-list .btn-add-part {
     font-size: 15px;
     padding: 12px 20px;
+    width: 100%;
   }
 }
