@@ -1,0 +1,133 @@
+/* Parça Seçim Bileşenleri için Responsive Stiller */
+
+.parca-secim-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.parca-secim-row select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #feb47b;
+  font-size: 16px;
+  background: #fff;
+  flex: 1;
+  min-width: 0;
+}
+
+.parca-secim-row select:first-of-type {
+  min-width: 180px;
+}
+
+.parca-secim-row select:nth-of-type(2) {
+  min-width: 140px;
+}
+
+.parca-secim-row select:nth-of-type(3) {
+  min-width: 100px;
+}
+
+.parca-secim-row .btn-remove {
+  color: #e53935;
+  background: transparent;
+  border: 1px solid #e53935;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.parca-secim-row .btn-remove:hover {
+  background: #e53935;
+  color: #fff;
+}
+
+.parca-secim-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.parca-secim-list label {
+  font-weight: 600;
+  color: #425466;
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.parca-secim-list .btn-add-part {
+  margin-top: 8px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(254, 180, 123, 0.3);
+  transition: all 0.2s;
+  width: 100%;
+  max-width: 300px;
+}
+
+.parca-secim-list .btn-add-part:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(254, 180, 123, 0.4);
+}
+
+.parca-secim-list .btn-add-part:disabled {
+  background: #eee;
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Tablet ve küçük ekranlar için */
+@media (max-width: 768px) {
+  .parca-secim-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .parca-secim-row select {
+    width: 100%;
+    min-width: 0 !important;
+  }
+
+  .parca-secim-row .btn-remove {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .parca-secim-list .btn-add-part {
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+    padding: 12px 24px;
+  }
+}
+
+/* Mobil ekranlar için */
+@media (max-width: 480px) {
+  .parca-secim-row {
+    gap: 10px;
+  }
+
+  .parca-secim-row select {
+    font-size: 15px;
+    padding: 10px 12px;
+  }
+
+  .parca-secim-list .btn-add-part {
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+}

@@ -6,6 +6,7 @@ import {
   ONARIM_SEVIYELERI,
   BOYA_SEVIYELERI,
 } from "../constants/partOptions";
+import "../styles/parcaSecim.css";
 
 export function ParcaSecimRow({
   value,
@@ -21,19 +22,11 @@ export function ParcaSecimRow({
     : PARCA_LISTESI_KODLU;
 
   return (
-    <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+    <div className="parca-secim-row">
       <select
         value={value.parca || ""}
         onChange={(e) => onChange({ ...value, parca: e.target.value })}
         required
-        style={{
-          padding: '8px 12px',
-          borderRadius: 8,
-          border: '1px solid #feb47b',
-          fontSize: 16,
-          minWidth: 180,
-          background: '#fff',
-        }}
       >
         <option value="">Parça Seçiniz</option>
         {filteredParts.map((p) => (
@@ -46,14 +39,6 @@ export function ParcaSecimRow({
         value={value.islemTuru || ""}
         onChange={(e) => onChange({ ...value, islemTuru: e.target.value, seviye: "" })}
         required
-        style={{
-          padding: '8px 12px',
-          borderRadius: 8,
-          border: '1px solid #feb47b',
-          fontSize: 16,
-          minWidth: 140,
-          background: '#fff',
-        }}
       >
         <option value="">İşlem Türü</option>
         {(isOnarim ? ISLEM_TURU_ONARIM : ISLEM_TURU_DEGISEN).map((it) => (
@@ -68,14 +53,6 @@ export function ParcaSecimRow({
           value={value.seviye || ""}
           onChange={(e) => onChange({ ...value, seviye: e.target.value })}
           required
-          style={{
-            padding: '8px 12px',
-            borderRadius: 8,
-            border: '1px solid #feb47b',
-            fontSize: 16,
-            minWidth: 100,
-            background: '#fff',
-          }}
         >
           <option value="">Seviye</option>
           {ONARIM_SEVIYELERI.map((s) => (
@@ -90,14 +67,6 @@ export function ParcaSecimRow({
           value={value.seviye || ""}
           onChange={(e) => onChange({ ...value, seviye: e.target.value })}
           required
-          style={{
-            padding: '8px 12px',
-            borderRadius: 8,
-            border: '1px solid #feb47b',
-            fontSize: 16,
-            minWidth: 100,
-            background: '#fff',
-          }}
         >
           <option value="">Boya Türü</option>
           {BOYA_SEVIYELERI.map((s) => (
@@ -108,7 +77,7 @@ export function ParcaSecimRow({
         </select>
       )}
       {onRemove && (
-        <button type="button" onClick={onRemove} style={{ color: "red" }}>
+        <button type="button" className="btn-remove" onClick={onRemove}>
           Sil
         </button>
       )}

@@ -1,5 +1,6 @@
 import React from "react";
 import { ParcaSecimRow } from "./ParcaSecimRow";
+import "../styles/parcaSecim.css";
 
 // aracKodu: "A", "B", ...
 export function ParcaSecimList({ value, onChange, isOnarim, label, aracKodu }) {
@@ -18,8 +19,8 @@ export function ParcaSecimList({ value, onChange, isOnarim, label, aracKodu }) {
     onChange(newArr);
   };
   return (
-    <div>
-      <label style={{ fontWeight: 600 }}>{label}</label>
+    <div className="parca-secim-list">
+      <label>{label}</label>
       {value.map((row, idx) => (
         <ParcaSecimRow
           key={idx}
@@ -32,20 +33,8 @@ export function ParcaSecimList({ value, onChange, isOnarim, label, aracKodu }) {
       ))}
       <button
         type="button"
+        className="btn-add-part"
         onClick={handleAdd}
-        style={{
-          marginTop: 8,
-          padding: '10px 24px',
-          borderRadius: 8,
-          background: aracKodu ? 'linear-gradient(90deg, #ff7e5f, #feb47b)' : '#eee',
-          color: aracKodu ? '#fff' : '#aaa',
-          fontWeight: 600,
-          fontSize: 18,
-          border: 'none',
-          cursor: aracKodu ? 'pointer' : 'not-allowed',
-          boxShadow: aracKodu ? '0 2px 8px #feb47b44' : 'none',
-          transition: 'all 0.2s',
-        }}
         disabled={!aracKodu}
       >
         + Parça Ekle
