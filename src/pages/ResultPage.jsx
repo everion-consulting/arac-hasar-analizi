@@ -16,6 +16,7 @@ function ResultPage({ onReset, onLogout, result }) {
     <div className="result-page">
       <button
         type="button"
+        className="btn-logout"
         onClick={onLogout}
         style={{
           position: 'absolute',

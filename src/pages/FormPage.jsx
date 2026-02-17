@@ -99,10 +99,11 @@ function FormPage({ onNext, onLogout }) {
 
     return (
         <div className="form-page">
-            <button
-                type="button"
-                onClick={onLogout}
-                style={{
+<button
+                    type="button"
+                    className="btn-logout"
+                    onClick={onLogout}
+                    style={{
                     position: 'absolute',
                     top: 24,
                     right: 24,

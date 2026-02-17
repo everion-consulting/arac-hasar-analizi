@@ -31,9 +31,11 @@ body {
 
 .form-container {
   max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  padding: 0 8px;
 }
 
 .form-header {
@@ -250,7 +252,9 @@ textarea {
 
 }
 
-button {
+/* Sadece form içindeki ana butonlar tam genişlik (logout butonu etkilenmesin) */
+form button[type="submit"],
+.action-card button {
   width: 100%;
   padding: 16px 32px;
   background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
@@ -266,13 +270,15 @@ button {
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
-button:hover {
+form button[type="submit"]:hover,
+.action-card button:hover {
   background: linear-gradient(135deg, #ff8c42 0%, #ffa35c 100%);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
 }
 
-button:active {
+form button[type="submit"]:active,
+.action-card button:active {
   transform: translateY(0);
 }
 
@@ -296,6 +302,13 @@ button:active {
 
 .help-text a:hover {
   text-decoration: underline;
+}
+
+/* Çıkış butonu: tam genişlik almasın, küçük ekranda taşmasın */
+.btn-logout {
+  width: auto !important;
+  min-width: auto !important;
+  display: inline-flex !important;
 }
 
 @media (max-width: 768px) {
@@ -330,5 +343,55 @@ button:active {
 
   .action-card {
     padding: 28px 20px;
+  }
+
+  .subsection {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-page {
+    padding: 24px 12px;
+  }
+
+  .form-header h1 {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .brand-badge {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .form-card {
+    padding: 20px 16px;
+  }
+
+  .card-header h2 {
+    font-size: 18px;
+  }
+
+  .card-number {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  form button[type="submit"],
+  .action-card button {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  .btn-logout {
+    top: 12px !important;
+    right: 12px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
   }
 }

@@ -31,9 +31,17 @@ body {
 
 .result-container {
   max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   position: relative;
   z-index: 1;
+  padding: 0 8px;
+}
+
+.btn-logout {
+  width: auto !important;
+  min-width: auto !important;
+  display: inline-flex !important;
 }
 
 .result-header {
@@ -250,11 +258,95 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .result-card .value {
+    font-size: 32px;
+  }
+
   .info-card {
     padding: 24px 20px;
   }
 
   .action-section {
     grid-template-columns: 1fr;
+  }
+
+  .result-main,
+  .result-grid {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .result-main .result-card,
+  .result-grid .result-card {
+    min-width: 0 !important;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .result-page {
+    padding: 24px 12px;
+  }
+
+  .result-header h1 {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .success-badge {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .result-card {
+    padding: 24px 16px;
+  }
+
+  .result-card .value {
+    font-size: 28px;
+  }
+
+  .result-card .label {
+    font-size: 12px;
+  }
+
+  .info-card {
+    padding: 20px 16px;
+  }
+
+  .info-text {
+    font-size: 14px;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    padding: 14px 24px;
+    font-size: 15px;
+  }
+
+  .btn-logout {
+    top: 12px !important;
+    right: 12px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+
+  .result-main,
+  .result-grid {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .result-main .result-card,
+  .result-grid .result-card {
+    min-width: 0 !important;
+    width: 100%;
+  }
+
+  .result-main .value.main {
+    font-size: 2rem !important;
   }
 }
