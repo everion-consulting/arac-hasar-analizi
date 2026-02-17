@@ -355,10 +355,17 @@ form button[type="submit"]:active,
 }
 
 /* Çıkış butonu: tam genişlik almasın, küçük ekranda taşmasın */
-.btn-logout {
+.btn-logout,
+.btn-history {
   width: auto !important;
   min-width: auto !important;
   display: inline-flex !important;
+}
+
+.btn-history:hover {
+  background: #5548e5 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 91, 255, 0.4) !important;
 }
 
 @media (max-width: 768px) {
@@ -484,6 +491,14 @@ form button[type="submit"]:active,
   .select-arac-turu {
     font-size: 16px;
     padding: 12px 16px;
+  }
+
+  .btn-history {
+    top: 12px !important;
+    left: 12px !important;
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+    max-width: calc(100vw - 24px);
   }
 
   .btn-logout {

@@ -69,7 +69,13 @@ function App() {
 
   return (
     <>
-      {step === 1 && <FormPage onNext={handleNext} onLogout={handleLogout} />}
+      {step === 1 && (
+        <FormPage
+          onNext={handleNext}
+          onLogout={handleLogout}
+          onShowHistory={() => setShowHistory(true)}
+        />
+      )}
       {step === 2 && (
         <ResultPage
           onReset={handleReset}
