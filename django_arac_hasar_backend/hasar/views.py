@@ -47,11 +47,12 @@ def frontend_login(request):
     # Django session oluştur
     django_login(request, auth_user)
 
-    # Giriş başarılı, özet bilgi dön
+    # Giriş başarılı, özet bilgi + user_id dön
     return Response(
         {
             "detail": "Giriş başarılı.",
             "username": auth_user.username,
+            "user_id": auth_user.id,
         }
     )
 
@@ -204,7 +205,7 @@ def logout(request):
     return Response({"detail": "Çıkış yapıldı."})
 
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def prediction_history(request):
     """
     Kullanıcının geçmiş tahminlerini getirir.
@@ -213,16 +214,27 @@ def prediction_history(request):
     if not request.user.is_authenticated:
         return Response({"detail": "Giriş yapmanız gerekiyor."}, status=401)
 
-    frontend_user = FrontendUser.objects.filter(
-        username=request.user.username, is_active=True
-    ).first()
-    if frontend_user is None:
-        return Response({"detail": "Frontend kullanıcı bulunamadı."}, status=400)
-    
-    # Kullanıcının tahminlerini tarihe göre sıralı getir
-    tahminler = HasarTahmin.objects.filter(frontend_user=frontend_user).order_by(
-        "-created_at"
-    )
+    # İsteğe bağlı user_id:
+    # - GET ise query paramdan
+    # - POST ise JSON body'den okunur
+    if request.method == "POST":
+        requested_user_id = request.data.get("user_id")
+    else:
+        requested_user_id = request.query_params.get("user_id")
+    if requested_user_id is not None:
+        try:
+            requested_user_id = int(requested_user_id)
+        except (TypeError, ValueError):
+            return Response({"detail": "Geçersiz user_id."}, status=400)
+
+        if requested_user_id != request.user.id:
+            return Response({"detail": "Bu kullanıcı için yetkiniz yok."}, status=403)
+        user_id = requested_user_id
+    else:
+        user_id = request.user.id
+
+    # Sadece HasarTahmin.user FK'sine göre filtrele
+    tahminler = HasarTahmin.objects.filter(user_id=user_id).order_by("-created_at")
     
     # Serialize et
     history_data = []
@@ -244,8 +256,6 @@ def prediction_history(request):
         {
             "results": history_data,
             "count": len(history_data),
-            # Debug/izleme için ikisini de dönelim
-            "user_id": request.user.id,
-            "frontend_user_id": frontend_user.id,
+            "user_id": user_id,
         }
     )

@@ -15,12 +15,19 @@ function HistoryPage({ onBack, onLogout }) {
     try {
       setLoading(true);
       setError(null);
+      const userId = localStorage.getItem('userId');
+      const csrfToken = getCsrfToken();
+
       const response = await fetch('/api/predictions/history', {
-        method: 'GET',
+        method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken || '',
         },
+        body: JSON.stringify(
+          userId ? { user_id: Number(userId) } : {}
+        ),
       });
 
       if (!response.ok) {

@@ -25,13 +25,17 @@ function LoginPage({ onLoginSuccess }) {
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
         throw new Error(data.detail || 'Giriş başarısız');
       }
 
       // Giriş başarılıysa localStorage'a işaret koy ve parent'a haber ver
       localStorage.setItem('isLoggedIn', 'true');
+      if (data.user_id) {
+        localStorage.setItem('userId', String(data.user_id));
+      }
       onLoginSuccess();
     } catch (err) {
       setError(err.message);
