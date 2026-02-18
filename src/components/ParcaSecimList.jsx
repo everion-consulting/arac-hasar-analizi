@@ -4,14 +4,14 @@ import "../styles/parcaSecim.css";
 
 // aracKodu: "A", "B", ...
 export function ParcaSecimList({ value, onChange, isOnarim, label, aracKodu }) {
-  // value: array of { parca, islemTuru }
+  // value: array of { parca, islemTuru, seviye }
   const handleRowChange = (idx, row) => {
     const newArr = value.slice();
     newArr[idx] = row;
     onChange(newArr);
   };
   const handleAdd = () => {
-    onChange([...value, { parca: "", islemTuru: "" }]);
+    onChange([...value, { parca: "", islemTuru: "", seviye: "" }]);
   };
   const handleRemove = (idx) => {
     const newArr = value.slice();

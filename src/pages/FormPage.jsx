@@ -51,49 +51,13 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
         const seciliArac = ARAC_TURU_LISTESI.find(t => t.ad === aracTuru);
         const aracKodu = seciliArac ? seciliArac.kod : undefined;
 
-        // Değişen parçalar listesi - direkt gönder
-        const mapDegisenParcaList = (list) =>
+        // Parça listelerini sadece kod olarak gönder
+        const mapParcaList = (list) =>
             list.map(item => ({
-                parca_kodu: item.parca,
+                parca_kodu: item.parca, // kodu
                 islemTuru: item.islemTuru,
+                seviye: item.seviye
             }));
-
-        // Onarılan parçalar listesi - parse et ve genişlet
-        const mapOnarilanParcaList = (list) => {
-            const result = [];
-            list.forEach(item => {
-                const { parca, islemTuru } = item;
-                
-                if (islemTuru === 'boyasiz_onarim') {
-                    // Sadece onarım
-                    result.push({
-                        parca_kodu: parca,
-                        islemTuru: 'onarim',
-                        seviye: null
-                    });
-                } else {
-                    // Parse et: "hafif_lokal_boya" -> hafif onarım + lokal boya
-                    const parts = islemTuru.split('_'); // ["hafif", "lokal", "boya"]
-                    const seviye = parts[0]; // hafif, orta, yuksek
-                    const boyaTuru = parts[1]; // lokal, tam
-                    
-                    // Onarım entry
-                    result.push({
-                        parca_kodu: parca,
-                        islemTuru: 'onarim',
-                        seviye: seviye
-                    });
-                    
-                    // Boya entry
-                    result.push({
-                        parca_kodu: parca,
-                        islemTuru: 'boya',
-                        seviye: boyaTuru
-                    });
-                }
-            });
-            return result;
-        };
 
         const payload = {
             rayic_bedel: Number(rayic_bedel),
@@ -106,8 +70,8 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
             model: selectedModel,
             arac_turu: aracTuru,
             arac_kodu: aracKodu,
-            degisen_parcalar: mapDegisenParcaList(degisenList),
-            onarilan_parcalar: mapOnarilanParcaList(onarilanList)
+            degisen_parcalar: mapParcaList(degisenList),
+            onarilan_parcalar: mapParcaList(onarilanList)
         };
         // Eğer arac_yasi ve parca_basi_hasar frontend'de hesaplanacaksa burada ekleyin
         try {
