@@ -1,12 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getCsrfToken } from '../utils/csrf';
 import '../styles/historyPage.css';
+import { PARCA_LISTESI_KODLU } from '../constants/partOptions';
 
 function HistoryPage({ onBack, onLogout }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState({});
+
+  // Parça kodu -> isim sözlüğü
+  const parcaKodToAd = useMemo(() => {
+    const map = {};
+    PARCA_LISTESI_KODLU.forEach((p) => {
+      map[p.kod] = p.ad;
+    });
+    return map;
+  }, []);
 
   useEffect(() => {
     fetchHistory();
@@ -217,11 +227,18 @@ function HistoryPage({ onBack, onLogout }) {
                           <li>Kayıtlı onarılan parça yok.</li>
                         )}
                         {(item.onarilan_parcalar || []).map((p, idx) => (
-                          <li key={idx}>
-                            {(p.parca_kodu || p.parca) ?? 'Parça'}{' '}
-                            {p.islemTuru ? `· ${p.islemTuru}` : ''}{' '}
-                            {p.seviye ? `· ${p.seviye}` : ''}
-                          </li>
+                          (() => {
+                            const kod = p.parca_kodu || p.parca;
+                            const ad = kod ? parcaKodToAd[kod] : null;
+                            return (
+                              <li key={idx}>
+                                {kod || 'Parça'}
+                                {ad ? ` - ${ad}` : ''}
+                                {p.islemTuru ? ` · ${p.islemTuru}` : ''}
+                                {p.seviye ? ` · ${p.seviye}` : ''}
+                              </li>
+                            );
+                          })()
                         ))}
                       </ul>
                     )}
@@ -246,11 +263,18 @@ function HistoryPage({ onBack, onLogout }) {
                           <li>Kayıtlı değişen parça yok.</li>
                         )}
                         {(item.degisen_parcalar || []).map((p, idx) => (
-                          <li key={idx}>
-                            {(p.parca_kodu || p.parca) ?? 'Parça'}{' '}
-                            {p.islemTuru ? `· ${p.islemTuru}` : ''}{' '}
-                            {p.seviye ? `· ${p.seviye}` : ''}
-                          </li>
+                          (() => {
+                            const kod = p.parca_kodu || p.parca;
+                            const ad = kod ? parcaKodToAd[kod] : null;
+                            return (
+                              <li key={idx}>
+                                {kod || 'Parça'}
+                                {ad ? ` - ${ad}` : ''}
+                                {p.islemTuru ? ` · ${p.islemTuru}` : ''}
+                                {p.seviye ? ` · ${p.seviye}` : ''}
+                              </li>
+                            );
+                          })()
                         ))}
                       </ul>
                     )}
