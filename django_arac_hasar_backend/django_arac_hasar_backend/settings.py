@@ -46,7 +46,11 @@ if DEBUG:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
 else:
-    CSRF_TRUSTED_ORIGINS = ['https://hasar.everionai.com']
+    CSRF_TRUSTED_ORIGINS = [
+        'https://hasar.everionai.com',
+        'http://31.210.67.67',
+        'https://31.210.67.67',
+    ]
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

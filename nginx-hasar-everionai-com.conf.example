@@ -6,7 +6,8 @@
 
 server {
     listen 80;
-    server_name hasar.everionai.com;
+    # Domain veya IP ile erişim (IP: 31.210.67.67)
+    server_name hasar.everionai.com 31.210.67.67;
 
     # Statik dosyalar için (Django admin CSS/JS)
     location /static/ {
