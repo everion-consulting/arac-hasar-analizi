@@ -6,6 +6,7 @@ function HistoryPage({ onBack, onLogout }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expanded, setExpanded] = useState({});
 
   useEffect(() => {
     fetchHistory();
@@ -41,6 +42,16 @@ function HistoryPage({ onBack, onLogout }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleSection = (id, key) => {
+    setExpanded((prev) => ({
+      ...prev,
+      [id]: {
+        ...(prev[id] || {}),
+        [key]: !prev[id]?.[key],
+      },
+    }));
   };
 
   const formatDate = (dateString) => {
@@ -147,6 +158,11 @@ function HistoryPage({ onBack, onLogout }) {
                         ? `${item.marka} ${item.model}`
                         : item.arac_turu || 'Araç Bilgisi Yok'}
                     </h3>
+                    {item.arac_yasi != null && (
+                      <div className="history-subtitle">
+                        Araç yaşı: {item.arac_yasi}
+                      </div>
+                    )}
                     <span className="history-date">{formatDate(item.created_at)}</span>
                   </div>
                 </div>
@@ -178,6 +194,66 @@ function HistoryPage({ onBack, onLogout }) {
                         <span className="stat-value">{formatCurrency(item.hasar_bedeli)}</span>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Onarılan / Değişen parçalar - açılır/kapanır */}
+                  <div className="parts-section">
+                    <button
+                      type="button"
+                      className="parts-toggle"
+                      onClick={() => toggleSection(item.id, 'onarilan')}
+                    >
+                      <span>
+                        <span className="dot" style={{ color: '#10b981' }}>●</span>
+                        Onarılan Parçalar
+                      </span>
+                      <span className="parts-toggle-icon">
+                        {expanded[item.id]?.onarilan ? '▲' : '▼'}
+                      </span>
+                    </button>
+                    {expanded[item.id]?.onarilan && (
+                      <ul className="parts-list">
+                        {(item.onarilan_parcalar || []).length === 0 && (
+                          <li>Kayıtlı onarılan parça yok.</li>
+                        )}
+                        {(item.onarilan_parcalar || []).map((p, idx) => (
+                          <li key={idx}>
+                            {(p.parca_kodu || p.parca) ?? 'Parça'}{' '}
+                            {p.islemTuru ? `· ${p.islemTuru}` : ''}{' '}
+                            {p.seviye ? `· ${p.seviye}` : ''}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <button
+                      type="button"
+                      className="parts-toggle"
+                      onClick={() => toggleSection(item.id, 'degisen')}
+                      style={{ marginTop: 4 }}
+                    >
+                      <span>
+                        <span className="dot" style={{ color: '#f97316' }}>●</span>
+                        Değişen Parçalar
+                      </span>
+                      <span className="parts-toggle-icon">
+                        {expanded[item.id]?.degisen ? '▲' : '▼'}
+                      </span>
+                    </button>
+                    {expanded[item.id]?.degisen && (
+                      <ul className="parts-list">
+                        {(item.degisen_parcalar || []).length === 0 && (
+                          <li>Kayıtlı değişen parça yok.</li>
+                        )}
+                        {(item.degisen_parcalar || []).map((p, idx) => (
+                          <li key={idx}>
+                            {(p.parca_kodu || p.parca) ?? 'Parça'}{' '}
+                            {p.islemTuru ? `· ${p.islemTuru}` : ''}{' '}
+                            {p.seviye ? `· ${p.seviye}` : ''}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               </div>

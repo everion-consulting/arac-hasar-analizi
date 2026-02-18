@@ -252,11 +252,14 @@ def prediction_history(request):
             "marka": tahmin.marka,
             "model": tahmin.model,
             "arac_turu": tahmin.arac_turu,
-            "tahmini": float(tahmin.tahmini) if tahmin.tahmini else None,
-            "min_deger": float(tahmin.min_deger) if tahmin.min_deger else None,
-            "max_deger": float(tahmin.max_deger) if tahmin.max_deger else None,
+            "arac_yasi": tahmin.arac_yasi,
+            "tahmini": float(tahmin.tahmini) if tahmin.tahmini is not None else None,
+            "min_deger": float(tahmin.min_deger) if tahmin.min_deger is not None else None,
+            "max_deger": float(tahmin.max_deger) if tahmin.max_deger is not None else None,
             "rayic_bedel": float(tahmin.rayic_bedel),
             "hasar_bedeli": float(tahmin.hasar_bedeli),
+            "degisen_parcalar": tahmin.degisen_parcalar or [],
+            "onarilan_parcalar": tahmin.onarilan_parcalar or [],
             "created_at": tahmin.created_at.isoformat() if tahmin.created_at else None,
         })
     
