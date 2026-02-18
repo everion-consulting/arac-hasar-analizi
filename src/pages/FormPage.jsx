@@ -95,19 +95,23 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
             return result;
         };
 
+        // Parça listelerini hesapla
+        const degisen_parcalar = mapDegisenParcaList(degisenList);
+        const onarilan_parcalar = mapOnarilanParcaList(onarilanList);
+
         const payload = {
             rayic_bedel: Number(rayic_bedel),
             hasar_bedeli: Number(form.toplamHasar),
-            degisen_parca_sayisi: degisenList.length,
-            onarilan_parca_sayisi: onarilanList.length,
+            degisen_parca_sayisi: degisen_parcalar.length,
+            onarilan_parca_sayisi: onarilan_parcalar.length,
             arac_kilometresi: Number(form.km),
             arac_yasi: Number(form.arac_yasi),
             marka: selectedMarka,
             model: selectedModel,
             arac_turu: aracTuru,
             arac_kodu: aracKodu,
-            degisen_parcalar: mapDegisenParcaList(degisenList),
-            onarilan_parcalar: mapOnarilanParcaList(onarilanList)
+            degisen_parcalar: degisen_parcalar,
+            onarilan_parcalar: onarilan_parcalar
         };
         // Eğer arac_yasi ve parca_basi_hasar frontend'de hesaplanacaksa burada ekleyin
         try {
