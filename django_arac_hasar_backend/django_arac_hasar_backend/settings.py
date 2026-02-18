@@ -33,8 +33,8 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 ALLOWED_HOSTS = ['hasar.everionai.com', '31.210.67.67', 'localhost', '127.0.0.1']
 
 # CSRF / güvenlik ayarları:
-# - Production'da sadece HTTPS domainine güven
-# - Local geliştirmede Vite ve Django'ya HTTP üzerinden izin ver
+# - Production'da HTTPS domain (hasar.everionai.com) üzerinden erişim
+# - IP (31.210.67.67) sadece ALLOWED_HOSTS'ta, CSRF için domain kullanılıyor
 if DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         'http://hasar.everionai.com',
@@ -47,13 +47,15 @@ if DEBUG:
     SESSION_COOKIE_SECURE = False
 else:
     CSRF_TRUSTED_ORIGINS = [
+        'http://hasar.everionai.com',
         'https://hasar.everionai.com',
-        'http://31.210.67.67',
-        'https://31.210.67.67',
     ]
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# CSRF cookie'sinin JavaScript'ten okunabilmesi için (frontend getCsrfToken() kullanıyor)
+CSRF_COOKIE_HTTPONLY = False
 
 
 # Application definition
