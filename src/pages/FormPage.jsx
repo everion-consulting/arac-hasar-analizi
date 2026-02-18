@@ -51,27 +51,67 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
         const seciliArac = ARAC_TURU_LISTESI.find(t => t.ad === aracTuru);
         const aracKodu = seciliArac ? seciliArac.kod : undefined;
 
-        // Parça listelerini sadece kod olarak gönder
-        const mapParcaList = (list) =>
+        // Değişen parçalar listesi - direkt gönder
+        const mapDegisenParcaList = (list) =>
             list.map(item => ({
-                parca_kodu: item.parca, // kodu
+                parca_kodu: item.parca,
                 islemTuru: item.islemTuru,
-                seviye: item.seviye
             }));
+
+        // Onarılan parçalar listesi - parse et ve genişlet
+        const mapOnarilanParcaList = (list) => {
+            const result = [];
+            list.forEach(item => {
+                const { parca, islemTuru } = item;
+                
+                if (islemTuru === 'boyasiz_onarim') {
+                    // Sadece onarım
+                    result.push({
+                        parca_kodu: parca,
+                        islemTuru: 'onarim',
+                        seviye: null
+                    });
+                } else {
+                    // Parse et: "hafif_lokal_boya" -> hafif onarım + lokal boya
+                    const parts = islemTuru.split('_'); // ["hafif", "lokal", "boya"]
+                    const seviye = parts[0]; // hafif, orta, yuksek
+                    const boyaTuru = parts[1]; // lokal, tam
+                    
+                    // Onarım entry
+                    result.push({
+                        parca_kodu: parca,
+                        islemTuru: 'onarim',
+                        seviye: seviye
+                    });
+                    
+                    // Boya entry
+                    result.push({
+                        parca_kodu: parca,
+                        islemTuru: 'boya',
+                        seviye: boyaTuru
+                    });
+                }
+            });
+            return result;
+        };
+
+        // Parça listelerini hesapla
+        const degisen_parcalar = mapDegisenParcaList(degisenList);
+        const onarilan_parcalar = mapOnarilanParcaList(onarilanList);
 
         const payload = {
             rayic_bedel: Number(rayic_bedel),
             hasar_bedeli: Number(form.toplamHasar),
-            degisen_parca_sayisi: degisenList.length,
-            onarilan_parca_sayisi: onarilanList.length,
+            degisen_parca_sayisi: degisen_parcalar.length,
+            onarilan_parca_sayisi: onarilan_parcalar.length,
             arac_kilometresi: Number(form.km),
             arac_yasi: Number(form.arac_yasi),
             marka: selectedMarka,
             model: selectedModel,
             arac_turu: aracTuru,
             arac_kodu: aracKodu,
-            degisen_parcalar: mapParcaList(degisenList),
-            onarilan_parcalar: mapParcaList(onarilanList)
+            degisen_parcalar: degisen_parcalar,
+            onarilan_parcalar: onarilan_parcalar
         };
         // Eğer arac_yasi ve parca_basi_hasar frontend'de hesaplanacaksa burada ekleyin
         try {
