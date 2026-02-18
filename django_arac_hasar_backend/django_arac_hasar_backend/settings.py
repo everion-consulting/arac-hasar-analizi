@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv(
 # Ortam değişkeni ile kontrol: sunucuda DJANGO_DEBUG boş bırak, localde True yap.
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ['hasar.everionai.com', '31.210.67.253', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['hasar.everionai.com', '31.210.67.67', 'localhost', '127.0.0.1']
 
 # CSRF / güvenlik ayarları:
 # - Production'da sadece HTTPS domainine güven
