@@ -18,8 +18,9 @@ services:
     build: .
     restart: always
     # Container ayağa kalkarken önce migrate, sonra gunicorn çalışsın
+    # WORKDIR Dockerfile'da /app/django_arac_hasar_backend olduğu için manage.py burada
     command: >
-      sh -c "python django_arac_hasar_backend/manage.py migrate &&
+      sh -c "python manage.py migrate &&
              gunicorn django_arac_hasar_backend.wsgi:application --bind 0.0.0.0:8000"
     ports:
       - "8000:8000"
