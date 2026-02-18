@@ -127,9 +127,9 @@ function ResultPage({ onReset, onLogout, onShowHistory, result }) {
             <button className="secondary-btn" onClick={onReset}>
               Yeni Değerlendirme
             </button>
-            <button className="primary-btn">
+            {/* <button className="primary-btn">
               Raporu İndir
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
