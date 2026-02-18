@@ -43,6 +43,7 @@ export function ParcaSecimRow({
         onChange={(opt) => onChange({ ...value, parca: opt ? opt.value : "" })}
         placeholder="Parça Seçiniz"
         isClearable
+        menuPortalTarget={document.body}
         styles={{
           control: (base) => ({
             ...base,
@@ -55,7 +56,20 @@ export function ParcaSecimRow({
           option: (base, state) => ({
             ...base,
             fontSize: 16,
+            padding: "12px 16px",
             color: state.isSelected ? "#fff" : "#222",
+          }),
+          menu: (base) => ({
+            ...base,
+            zIndex: 9999,
+          }),
+          menuList: (base) => ({
+            ...base,
+            maxHeight: "300px",
+          }),
+          menuPortal: (base) => ({
+            ...base,
+            zIndex: 9999,
           }),
         }}
       />
@@ -65,6 +79,7 @@ export function ParcaSecimRow({
         onChange={(opt) => onChange({ ...value, islemTuru: opt ? opt.value : "" })}
         placeholder="İşlem Türü"
         isClearable
+        menuPortalTarget={document.body}
         styles={{
           control: (base) => ({
             ...base,
@@ -77,7 +92,20 @@ export function ParcaSecimRow({
           option: (base, state) => ({
             ...base,
             fontSize: 16,
+            padding: "12px 16px",
             color: state.isSelected ? "#fff" : "#222",
+          }),
+          menu: (base) => ({
+            ...base,
+            zIndex: 9999,
+          }),
+          menuList: (base) => ({
+            ...base,
+            maxHeight: "300px",
+          }),
+          menuPortal: (base) => ({
+            ...base,
+            zIndex: 9999,
           }),
         }}
       />
