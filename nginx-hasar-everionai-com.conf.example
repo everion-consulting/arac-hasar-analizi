@@ -9,39 +9,27 @@ server {
     # Domain veya IP ile erişim (IP: 31.210.67.67)
     server_name hasar.everionai.com 31.210.67.67;
 
-    # Statik dosyalar için (Django admin CSS/JS)
+    # Django Statik Dosyalar (admin CSS/JS ve frontend build dosyaları)
     location /static/ {
         alias /home/yzhasartahmin/arac-hasar-analizi/staticfiles/;
         expires 30d;
         add_header Cache-Control "public, no-transform";
-        try_files $uri =404; # klasör listelemeyi kapat, sadece gerçek dosyayı ara
+        try_files $uri =404;
     }
 
-    # Frontend (Vite dev server veya build edilmiş dosyalar)
+    # Backend API ve Auth endpoints (öncelikli - önce bunlar kontrol edilsin)
+    location ~ ^/(api|auth|predict|admin)/ {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Ana giriş - Frontend build edilmişse static'ten, yoksa Django'dan serve et
+    # NOT: Frontend build edilmediyse Django'ya yönlendir (Django frontend'i serve edecek)
     location / {
-        proxy_pass http://localhost:5173;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-
-    # Backend API (Django)
-    location /api/ {
-        proxy_pass http://localhost:8000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    # Admin panel
-    location /admin/ {
-        proxy_pass http://localhost:8000;
+        proxy_pass http://127.0.0.1:8000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

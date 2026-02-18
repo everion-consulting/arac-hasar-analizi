@@ -1,7 +1,11 @@
+import os
 import pandas as pd
 from django.contrib.auth import authenticate, login as django_login, logout as django_logout
+from django.conf import settings
+from django.http import FileResponse, HttpResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from pathlib import Path
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -259,3 +263,40 @@ def prediction_history(request):
             "user_id": user_id,
         }
     )
+
+
+def serve_frontend(request):
+    """
+    Frontend SPA'yı serve eder. Tüm route'lar index.html'e yönlendirilir.
+    Frontend build edilmişse dist/index.html'i, yoksa root'taki index.html'i kullanır.
+    """
+    # Frontend build klasörü (dist) varsa onu kullan, yoksa root'taki index.html'i kullan
+    build_path = Path(settings.BASE_DIR.parent) / "dist" / "index.html"
+    root_path = Path(settings.BASE_DIR.parent) / "index.html"
+    
+    if build_path.exists():
+        index_file = build_path
+    elif root_path.exists():
+        index_file = root_path
+    else:
+        # Fallback: basit HTML döndür
+        return HttpResponse(
+            """
+            <!DOCTYPE html>
+            <html>
+            <head><title>Frontend Build Edilmeli</title></head>
+            <body>
+                <h1>Frontend build edilmeli</h1>
+                <p>Lütfen <code>npm run build</code> komutunu çalıştırın.</p>
+            </body>
+            </html>
+            """,
+            content_type="text/html"
+        )
+    
+    try:
+        with open(index_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        return HttpResponse(content, content_type="text/html")
+    except Exception as e:
+        return HttpResponse(f"Error loading frontend: {str(e)}", status=500)
