@@ -314,9 +314,13 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
                                             }}
                                             placeholder="Marka Seçiniz"
                                             isClearable
+                                            menuPortalTarget={document.body}
                                             styles={{
                                                 control: (base) => ({ ...base, minHeight: 48, fontSize: 18, borderRadius: 10, borderColor: '#feb47b', boxShadow: '0 2px 8px #feb47b22' }),
-                                                option: (base, state) => ({ ...base, fontSize: 18, color: state.isSelected ? '#fff' : '#222' }),
+                                                option: (base, state) => ({ ...base, fontSize: 18, padding: '12px 16px', color: state.isSelected ? '#fff' : '#222' }),
+                                                menu: (base) => ({ ...base, zIndex: 9999 }),
+                                                menuList: (base) => ({ ...base, maxHeight: '300px' }),
+                                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                                             }}
                                         />
                                     </div>
@@ -332,9 +336,13 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
                                             placeholder="Model Seçiniz"
                                             isClearable
                                             isDisabled={!selectedMarka}
+                                            menuPortalTarget={document.body}
                                             styles={{
                                                 control: (base) => ({ ...base, minHeight: 48, fontSize: 18, borderRadius: 10, borderColor: '#feb47b', boxShadow: '0 2px 8px #feb47b22', background: !selectedMarka ? '#f5f5f5' : '#fff' }),
-                                                option: (base, state) => ({ ...base, fontSize: 18, color: state.isSelected ? '#fff' : '#222' }),
+                                                option: (base, state) => ({ ...base, fontSize: 18, padding: '12px 16px', color: state.isSelected ? '#fff' : '#222' }),
+                                                menu: (base) => ({ ...base, zIndex: 9999 }),
+                                                menuList: (base) => ({ ...base, maxHeight: '300px' }),
+                                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                                             }}
                                         />
                                     </div>
