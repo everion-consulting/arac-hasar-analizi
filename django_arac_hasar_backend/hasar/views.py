@@ -132,20 +132,24 @@ def predict(request):
 
         result = model.predict(df)
 
+        # ML modelinden sadece ana tahmini ve ek metrikleri al
         if isinstance(result, dict):
             tahmini = float(result.get("tahmin", 0))
-            min_val = float(result.get("min", 0))
-            max_val = float(result.get("max", 0))
             uyari = result.get("uyari")
             katsayi_H_hasar = result.get("katsayi_H_hasar")
             knn_baseline = result.get("knn_baseline")
         else:
             tahmini = float(result[0]) if hasattr(result, "__getitem__") else float(result)
-            min_val = tahmini * 0.9
-            max_val = tahmini * 1.1
             uyari = None
             katsayi_H_hasar = None
             knn_baseline = None
+
+        # Backend tarafında min/max'ı senin formülüne göre hesapla:
+        # min = tahmini - rayic_bedel * 0.005
+        # max = tahmini + rayic_bedel * 0.005
+        rayic_bedel = float(data.get("rayic_bedel", 0))
+        min_val = max(0.0, tahmini - rayic_bedel * 0.005)
+        max_val = max(0.0, tahmini + rayic_bedel * 0.005)
 
         # DB'ye kaydet
         hasar = HasarTahmin.objects.create(

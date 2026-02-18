@@ -8,9 +8,11 @@ function ResultPage({ onReset, onLogout, onShowHistory, result }) {
   const rayic = result?.rayic_bedel ?? null;
   let min = '--';
   let max = '--';
-  if (tahmini !== null && rayic !== null) {
-    min = Math.max(0, Math.round(tahmini - rayic * 0.005)) + ' ₺';
-    max = Math.round(tahmini + rayic * 0.005) + ' ₺';
+  const tahminiNum = tahmini !== null ? Number(tahmini) : NaN;
+  const rayicNum = rayic !== null ? Number(rayic) : NaN;
+  if (Number.isFinite(tahminiNum) && Number.isFinite(rayicNum)) {
+    min = Math.max(0, Math.round(tahminiNum - rayicNum * 0.005)) + ' ₺';
+    max = Math.round(tahminiNum + rayicNum * 0.005) + ' ₺';
   }
   return (
     <div className="result-page">
