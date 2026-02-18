@@ -8,6 +8,7 @@ function HistoryPage({ onBack, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState({});
+  const [search, setSearch] = useState('');
 
   // Parça kodu -> isim sözlüğü
   const parcaKodToAd = useMemo(() => {
@@ -86,6 +87,36 @@ function HistoryPage({ onBack, onLogout }) {
     }).format(value);
   };
 
+  const filteredHistory = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return history;
+
+    return history.filter((item) => {
+      const fields = [];
+      if (item.marka) fields.push(item.marka);
+      if (item.model) fields.push(item.model);
+      if (item.arac_turu) fields.push(item.arac_turu);
+      if (item.arac_yasi != null) fields.push(String(item.arac_yasi));
+      if (item.tahmini != null) fields.push(String(item.tahmini));
+      if (item.rayic_bedel != null) fields.push(String(item.rayic_bedel));
+      if (item.hasar_bedeli != null) fields.push(String(item.hasar_bedeli));
+
+      // Parça kod ve adları
+      [...(item.onarilan_parcalar || []), ...(item.degisen_parcalar || [])].forEach(
+        (p) => {
+          const kod = p.parca_kodu || p.parca;
+          if (kod) fields.push(kod);
+          const ad = kod ? parcaKodToAd[kod] : null;
+          if (ad) fields.push(ad);
+        },
+      );
+
+      return fields.some(
+        (f) => f && f.toString().toLowerCase().includes(q),
+      );
+    });
+  }, [history, search, parcaKodToAd]);
+
   return (
     <div className="history-page">
       <button
@@ -131,6 +162,15 @@ function HistoryPage({ onBack, onLogout }) {
           </p>
         </div>
 
+        <div className="history-search">
+          <input
+            type="text"
+            placeholder="Araç, plaka, parça kodu veya isim ile ara..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
         {loading && (
           <div className="loading-state">
             <div className="spinner"></div>
@@ -147,7 +187,7 @@ function HistoryPage({ onBack, onLogout }) {
           </div>
         )}
 
-        {!loading && !error && history.length === 0 && (
+        {!loading && !error && filteredHistory.length === 0 && (
           <div className="empty-state">
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -157,9 +197,9 @@ function HistoryPage({ onBack, onLogout }) {
           </div>
         )}
 
-        {!loading && !error && history.length > 0 && (
+        {!loading && !error && filteredHistory.length > 0 && (
           <div className="history-list">
-            {history.map((item) => (
+            {filteredHistory.map((item) => (
               <div key={item.id} className="history-card">
                 <div className="history-card-header">
                   <div className="history-card-title">

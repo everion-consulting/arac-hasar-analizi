@@ -70,6 +70,24 @@
   font-weight: 400;
 }
 
+.history-search {
+  margin: 24px 0 16px 0;
+}
+
+.history-search input {
+  width: 100%;
+  max-width: 360px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid #d0d7e2;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.history-search input::placeholder {
+  color: #9aa5b8;
+}
+
 .loading-state,
 .error-state,
 .empty-state {
