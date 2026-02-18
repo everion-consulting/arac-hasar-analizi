@@ -12,7 +12,7 @@ import { getCsrfToken } from '../utils/csrf';
 
 function FormPage({ onNext, onLogout, onShowHistory }) {
     const [form, setForm] = useState({
-        birinci: '', ikinci: '', ucuncu: '',
+        rayicDeger: '',
         toplamHasar: '',
         marka: '', model: '', km: '', arac_yasi: ''
     });
@@ -44,22 +44,56 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        // 3 rayiç değerinin ortalamasını al
-        const rayic_bedel = (
-            (Number(form.birinci) + Number(form.ikinci) + Number(form.ucuncu)) / 3
-        ).toFixed(2);
+        // Rayiç değeri al
+        const rayic_bedel = Number(form.rayicDeger);
         // Modelin beklediği alanlara dönüştür
         // Seçili araç türünün kodunu bul
         const seciliArac = ARAC_TURU_LISTESI.find(t => t.ad === aracTuru);
         const aracKodu = seciliArac ? seciliArac.kod : undefined;
 
-        // Parça listelerini sadece kod olarak gönder
-        const mapParcaList = (list) =>
+        // Değişen parçalar listesi - direkt gönder
+        const mapDegisenParcaList = (list) =>
             list.map(item => ({
-                parca_kodu: item.parca, // kodu
+                parca_kodu: item.parca,
                 islemTuru: item.islemTuru,
-                seviye: item.seviye
             }));
+
+        // Onarılan parçalar listesi - parse et ve genişlet
+        const mapOnarilanParcaList = (list) => {
+            const result = [];
+            list.forEach(item => {
+                const { parca, islemTuru } = item;
+                
+                if (islemTuru === 'boyasiz_onarim') {
+                    // Sadece onarım
+                    result.push({
+                        parca_kodu: parca,
+                        islemTuru: 'onarim',
+                        seviye: null
+                    });
+                } else {
+                    // Parse et: "hafif_lokal_boya" -> hafif onarım + lokal boya
+                    const parts = islemTuru.split('_'); // ["hafif", "lokal", "boya"]
+                    const seviye = parts[0]; // hafif, orta, yuksek
+                    const boyaTuru = parts[1]; // lokal, tam
+                    
+                    // Onarım entry
+                    result.push({
+                        parca_kodu: parca,
+                        islemTuru: 'onarim',
+                        seviye: seviye
+                    });
+                    
+                    // Boya entry
+                    result.push({
+                        parca_kodu: parca,
+                        islemTuru: 'boya',
+                        seviye: boyaTuru
+                    });
+                }
+            });
+            return result;
+        };
 
         const payload = {
             rayic_bedel: Number(rayic_bedel),
@@ -72,8 +106,8 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
             model: selectedModel,
             arac_turu: aracTuru,
             arac_kodu: aracKodu,
-            degisen_parcalar: mapParcaList(degisenList),
-            onarilan_parcalar: mapParcaList(onarilanList)
+            degisen_parcalar: mapDegisenParcaList(degisenList),
+            onarilan_parcalar: mapOnarilanParcaList(onarilanList)
         };
         // Eğer arac_yasi ve parca_basi_hasar frontend'de hesaplanacaksa burada ekleyin
         try {
@@ -183,25 +217,15 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
                                 <h2>Rayiç Değer Tespiti</h2>
                             </div>
                             <div className="card-content">
-                                <div className="grid-3">
-                                    <div className="input-group">
-                                        <label>Birinci Değer <span className="required">*</span></label>
-                                        <Input type="number" placeholder="0.00 ₺" name="birinci" value={form.birinci} onChange={handleChange} required />
-                                    </div>
-                                    <div className="input-group">
-                                        <label>İkinci Değer <span className="required">*</span></label>
-                                        <Input type="number" placeholder="0.00 ₺" name="ikinci" value={form.ikinci} onChange={handleChange} required />
-                                    </div>
-                                    <div className="input-group">
-                                        <label>Üçüncü Değer <span className="required">*</span></label>
-                                        <Input type="number" placeholder="0.00 ₺" name="ucuncu" value={form.ucuncu} onChange={handleChange} required />
-                                    </div>
+                                <div className="input-group">
+                                    <label>Rayiç Değer <span className="required">*</span></label>
+                                    <Input type="number" placeholder="0.00 ₺" name="rayicDeger" value={form.rayicDeger} onChange={handleChange} required />
                                 </div>
                                 <div className="info-banner">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M12 16v-4m0-4h.01M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
-                                    <span>Sistem otomatik olarak üç değerin ortalamasını alacak ve hesaplamada kullanacaktır.</span>
+                                    <span>Aracın piyasa rayiç değerini giriniz.</span>
                                 </div>
                             </div>
                         </div>

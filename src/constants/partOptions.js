@@ -373,8 +373,13 @@ export const ISLEM_TURU_DEGISEN = [
 ];
 
 export const ISLEM_TURU_ONARIM = [
-    { value: "onarim", label: "Onarım" },
-    { value: "boya", label: "Boya" }
+    { value: "boyasiz_onarim", label: "BOYASIZ ONARIM" },
+    { value: "hafif_lokal_boya", label: "LOKAL BOYA, HAFİF HASAR" },
+    { value: "hafif_tam_boya", label: "TAM BOYA, HAFİF HASAR" },
+    { value: "orta_lokal_boya", label: "LOKAL BOYA, ORTA HASAR" },
+    { value: "orta_tam_boya", label: "TAM BOYA, ORTA HASAR" },
+    { value: "yuksek_lokal_boya", label: "LOKAL BOYA, YÜKSEK HASAR" },
+    { value: "yuksek_tam_boya", label: "TAM BOYA, YÜKSEK HASAR" },
 ];
 
 export const ONARIM_SEVIYELERI = [

@@ -3,8 +3,6 @@ import {
   PARCA_LISTESI_KODLU,
   ISLEM_TURU_DEGISEN,
   ISLEM_TURU_ONARIM,
-  ONARIM_SEVIYELERI,
-  BOYA_SEVIYELERI,
 } from "../constants/partOptions";
 import "../styles/parcaSecim.css";
 
@@ -15,7 +13,7 @@ export function ParcaSecimRow({
   onRemove,
   aracKodu,
 }) {
-  // value: { parca, islemTuru, seviye }
+  // value: { parca, islemTuru }
   // Filtreli parça listesi (aracKodu ile başlıyorsa)
   const filteredParts = aracKodu
     ? PARCA_LISTESI_KODLU.filter((p) => p.kod.startsWith(aracKodu))
@@ -37,7 +35,7 @@ export function ParcaSecimRow({
       </select>
       <select
         value={value.islemTuru || ""}
-        onChange={(e) => onChange({ ...value, islemTuru: e.target.value, seviye: "" })}
+        onChange={(e) => onChange({ ...value, islemTuru: e.target.value })}
         required
       >
         <option value="">İşlem Türü</option>
@@ -47,35 +45,6 @@ export function ParcaSecimRow({
           </option>
         ))}
       </select>
-      {/* Seviye seçimi */}
-      {isOnarim && value.islemTuru === "onarim" && (
-        <select
-          value={value.seviye || ""}
-          onChange={(e) => onChange({ ...value, seviye: e.target.value })}
-          required
-        >
-          <option value="">Seviye</option>
-          {ONARIM_SEVIYELERI.map((s) => (
-            <option key={s.value} value={s.value}>
-              {s.label}
-            </option>
-          ))}
-        </select>
-      )}
-      {isOnarim && value.islemTuru === "boya" && (
-        <select
-          value={value.seviye || ""}
-          onChange={(e) => onChange({ ...value, seviye: e.target.value })}
-          required
-        >
-          <option value="">Boya Türü</option>
-          {BOYA_SEVIYELERI.map((s) => (
-            <option key={s.value} value={s.value}>
-              {s.label}
-            </option>
-          ))}
-        </select>
-      )}
       {onRemove && (
         <button type="button" className="btn-remove" onClick={onRemove}>
           Sil
