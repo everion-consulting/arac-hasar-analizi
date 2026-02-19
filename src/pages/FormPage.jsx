@@ -3,14 +3,14 @@ import TextArea from '../components/TextArea';
 import Button from '../components/Button';
 import '../styles/formPage.css';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ParcaSecimList } from '../components/ParcaSecimList';
 import { ARAC_TURU_LISTESI, MARKA_LISTESI, MODEL_LISTESI } from '../constants/partOptions';
 import Select from 'react-select';
 import { getCsrfToken } from '../utils/csrf';
 
 
-function FormPage({ onNext, onLogout, onShowHistory }) {
+function FormPage({ onNext, onLogout, onShowHistory, editData }) {
     const [form, setForm] = useState({
         rayicDeger: '',
         toplamHasar: '',
@@ -18,18 +18,40 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
     });
     const [selectedMarka, setSelectedMarka] = useState('');
     const [selectedModel, setSelectedModel] = useState('');
-    const [aracTuru, setAracTuru] = useState(''); // seçili araç türü adı
-    const [onarilanList, setOnarilanList] = useState([]); // [{parca, islemTuru, seviye}]
-    const [degisenList, setDegisenList] = useState([]); // [{parca, islemTuru, seviye}]
+    const [aracTuru, setAracTuru] = useState('Otomobil'); 
+    const [onarilanList, setOnarilanList] = useState([]); 
+    const [degisenList, setDegisenList] = useState([]); 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    // editData geldiğinde formu doldur
+    useEffect(() => {
+        if (editData) {
+            // Araç yaşından model yılını hesapla
+            const mevcutYil = new Date().getFullYear();
+            const modelYili = editData.arac_yasi ? mevcutYil - editData.arac_yasi : '';
+
+            setForm({
+                rayicDeger: editData.rayic_bedel || '',
+                toplamHasar: editData.hasar_bedeli || '',
+                marka: editData.marka || '',
+                model: editData.model || '',
+                km: editData.arac_kilometresi || '',
+                arac_yasi: modelYili || ''
+            });
+            setSelectedMarka(editData.marka || '');
+            setSelectedModel(editData.model || '');
+            setAracTuru(editData.arac_turu || 'Otomobil');
+            setOnarilanList(editData.onarilan_parcalar || []);
+            setDegisenList(editData.degisen_parcalar || []);
+        }
+    }, [editData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm(f => ({ ...f, [name]: value }));
     };
 
-    // Marka değişince modeli sıfırla
     const handleMarkaChange = (e) => {
         setSelectedMarka(e.target.value);
         setSelectedModel('');
@@ -99,13 +121,18 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
         const degisen_parcalar = mapDegisenParcaList(degisenList);
         const onarilan_parcalar = mapOnarilanParcaList(onarilanList);
 
+        // Model yılından araç yaşını hesapla
+        const modelYili = Number(form.arac_yasi);
+        const mevcutYil = new Date().getFullYear();
+        const hesaplananYas = mevcutYil - modelYili;
+
         const payload = {
             rayic_bedel: Number(rayic_bedel),
             hasar_bedeli: Number(form.toplamHasar),
             degisen_parca_sayisi: degisen_parcalar.length,
             onarilan_parca_sayisi: onarilan_parcalar.length,
             arac_kilometresi: Number(form.km),
-            arac_yasi: Number(form.arac_yasi),
+            arac_yasi: hesaplananYas,
             marka: selectedMarka,
             model: selectedModel,
             arac_turu: aracTuru,
@@ -205,7 +232,7 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
                         Profesyonel Değerlendirme
                     </div>
                     <div>
-                        <h1>Araç Hasar Analizi</h1>
+                        <h1>Değer Analizi</h1>
                         <p className="subtitle">
                             Hızlı ve güvenilir hasar değerlendirmesi için bilgilerinizi girin
                         </p>
@@ -353,8 +380,8 @@ function FormPage({ onNext, onLogout, onShowHistory }) {
                                         <Input type="number" placeholder="50000 km" name="km" value={form.km} onChange={handleChange} required />
                                     </div>
                                     <div className="input-group">
-                                        <label>Araç Yaşı <span className="required">*</span></label>
-                                        <Input type="number" placeholder="5" name="arac_yasi" value={form.arac_yasi} onChange={handleChange} required />
+                                        <label>Model Yılı <span className="required">*</span></label>
+                                        <Input type="number" placeholder="2020" name="arac_yasi" value={form.arac_yasi} onChange={handleChange} required />
                                     </div>
                                 </div>
                             </div>

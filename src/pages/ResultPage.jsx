@@ -123,7 +123,7 @@ function ResultPage({ onReset, onLogout, onShowHistory, result }) {
             </div>
           </div>
 
-          <div className="action-section">
+          <div className="action-section" style={{display:'flex', justifyContent:'center'}}>
             <button className="secondary-btn" onClick={onReset}>
               Yeni Değerlendirme
             </button>

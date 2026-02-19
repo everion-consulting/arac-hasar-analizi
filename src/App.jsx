@@ -9,6 +9,7 @@ function App() {
   const [step, setStep] = useState(1);
   const [result, setResult] = useState(null);
   const [showHistory, setShowHistory] = useState(false);
+  const [editData, setEditData] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(
     () => localStorage.getItem('isLoggedIn') === 'true'
   );
@@ -27,6 +28,13 @@ function App() {
 
   const handleReset = () => {
     setResult(null);
+    setEditData(null);
+    setStep(1);
+  };
+
+  const handleEdit = (data) => {
+    setEditData(data);
+    setShowHistory(false);
     setStep(1);
   };
 
@@ -63,6 +71,7 @@ function App() {
       <HistoryPage
         onBack={() => setShowHistory(false)}
         onLogout={handleLogout}
+        onEdit={handleEdit}
       />
     );
   }
@@ -74,6 +83,7 @@ function App() {
           onNext={handleNext}
           onLogout={handleLogout}
           onShowHistory={() => setShowHistory(true)}
+          editData={editData}
         />
       )}
       {step === 2 && (

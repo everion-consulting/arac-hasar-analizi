@@ -3,7 +3,7 @@ import { getCsrfToken } from '../utils/csrf';
 import '../styles/historyPage.css';
 import { PARCA_LISTESI_KODLU } from '../constants/partOptions';
 
-function HistoryPage({ onBack, onLogout }) {
+function HistoryPage({ onBack, onLogout, onEdit }) {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -215,6 +215,29 @@ function HistoryPage({ onBack, onLogout }) {
                     )}
                     <span className="history-date">{formatDate(item.created_at)}</span>
                   </div>
+                  {onEdit && (
+                    <button
+                      type="button"
+                      className="btn-edit"
+                      onClick={() => onEdit(item)}
+                      style={{
+                        padding: '8px 16px',
+                        borderRadius: 8,
+                        border: 'none',
+                        background: '#635bff',
+                        color: '#fff',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        boxShadow: '0 2px 6px rgba(99,91,255,0.25)',
+                        transition: 'all 0.2s',
+                      }}
+                      onMouseEnter={(e) => e.target.style.background = '#524ae0'}
+                      onMouseLeave={(e) => e.target.style.background = '#635bff'}
+                    >
+                      Düzenle
+                    </button>
+                  )}
                 </div>
                 <div className="history-card-content">
                   <div className="history-stats">
