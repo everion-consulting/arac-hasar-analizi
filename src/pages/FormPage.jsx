@@ -31,14 +31,56 @@ function FormPage({ onNext, onLogout, onShowHistory, editData }) {
             const mevcutYil = new Date().getFullYear();
             const modelYili = editData.arac_yasi ? mevcutYil - editData.arac_yasi : '';
 
-            // Parça formatlarını dönüştür (parca_kodu -> parca)
-            const mapParcalar = (parcalar) => {
+            // Değişen parçaları map et (direkt format)
+            const mapDegisenParcalar = (parcalar) => {
                 if (!Array.isArray(parcalar)) return [];
                 return parcalar.map(p => ({
                     parca: p.parca_kodu || p.parca || '',
                     islemTuru: p.islemTuru || '',
-                    seviye: p.seviye || ''
                 }));
+            };
+
+            // Onarılan parçaları collapse et (backend'den expanded geliyor)
+            // Backend: [{parca_kodu: "A.3", islemTuru: "onarim", seviye: "hafif"}, {parca_kodu: "A.3", islemTuru: "boya", seviye: "lokal"}]
+            // Frontend: [{parca: "A.3", islemTuru: "hafif_lokal_boya"}]
+            const mapOnarilanParcalar = (parcalar) => {
+                if (!Array.isArray(parcalar)) return [];
+                
+                // Parçaları grupla
+                const grouped = {};
+                parcalar.forEach(p => {
+                    const kod = p.parca_kodu || p.parca || '';
+                    if (!grouped[kod]) {
+                        grouped[kod] = { onarim: null, boya: null };
+                    }
+                    if (p.islemTuru === 'onarim') {
+                        grouped[kod].onarim = p.seviye || null;
+                    } else if (p.islemTuru === 'boya') {
+                        grouped[kod].boya = p.seviye || null;
+                    }
+                });
+
+                // Gruplanan parçaları frontend formatına çevir
+                const result = [];
+                Object.keys(grouped).forEach(kod => {
+                    const { onarim, boya } = grouped[kod];
+                    
+                    if (onarim && boya) {
+                        // Hem onarım hem boya var -> "seviye_boyaTuru_boya" formatı
+                        result.push({
+                            parca: kod,
+                            islemTuru: `${onarim}_${boya}_boya`
+                        });
+                    } else if (onarim && !boya) {
+                        // Sadece onarım var -> "boyasiz_onarim"
+                        result.push({
+                            parca: kod,
+                            islemTuru: 'boyasiz_onarim'
+                        });
+                    }
+                });
+                
+                return result;
             };
 
             setForm({
@@ -52,8 +94,8 @@ function FormPage({ onNext, onLogout, onShowHistory, editData }) {
             setSelectedMarka(editData.marka || '');
             setSelectedModel(editData.model || '');
             setAracTuru(editData.arac_turu || 'Otomobil');
-            setOnarilanList(mapParcalar(editData.onarilan_parcalar));
-            setDegisenList(mapParcalar(editData.degisen_parcalar));
+            setOnarilanList(mapOnarilanParcalar(editData.onarilan_parcalar));
+            setDegisenList(mapDegisenParcalar(editData.degisen_parcalar));
         }
     }, [editData]);
 
