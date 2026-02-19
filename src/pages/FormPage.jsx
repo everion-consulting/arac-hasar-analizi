@@ -31,6 +31,16 @@ function FormPage({ onNext, onLogout, onShowHistory, editData }) {
             const mevcutYil = new Date().getFullYear();
             const modelYili = editData.arac_yasi ? mevcutYil - editData.arac_yasi : '';
 
+            // Parça formatlarını dönüştür (parca_kodu -> parca)
+            const mapParcalar = (parcalar) => {
+                if (!Array.isArray(parcalar)) return [];
+                return parcalar.map(p => ({
+                    parca: p.parca_kodu || p.parca || '',
+                    islemTuru: p.islemTuru || '',
+                    seviye: p.seviye || ''
+                }));
+            };
+
             setForm({
                 rayicDeger: editData.rayic_bedel || '',
                 toplamHasar: editData.hasar_bedeli || '',
@@ -42,8 +52,8 @@ function FormPage({ onNext, onLogout, onShowHistory, editData }) {
             setSelectedMarka(editData.marka || '');
             setSelectedModel(editData.model || '');
             setAracTuru(editData.arac_turu || 'Otomobil');
-            setOnarilanList(editData.onarilan_parcalar || []);
-            setDegisenList(editData.degisen_parcalar || []);
+            setOnarilanList(mapParcalar(editData.onarilan_parcalar));
+            setDegisenList(mapParcalar(editData.degisen_parcalar));
         }
     }, [editData]);
 

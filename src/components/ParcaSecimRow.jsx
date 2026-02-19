@@ -47,16 +47,18 @@ export function ParcaSecimRow({
         styles={{
           control: (base) => ({
             ...base,
-            minHeight: 48,
-            fontSize: 16,
+            minHeight: 44,
+            fontSize: 14,
             borderRadius: 10,
             borderColor: "#feb47b",
             boxShadow: "0 2px 8px #feb47b22",
+            minWidth: "280px",
+            flex: 2,
           }),
           option: (base, state) => ({
             ...base,
-            fontSize: 16,
-            padding: "12px 16px",
+            fontSize: 14,
+            padding: "10px 14px",
             color: state.isSelected ? "#fff" : "#222",
           }),
           menu: (base) => ({
@@ -83,16 +85,18 @@ export function ParcaSecimRow({
         styles={{
           control: (base) => ({
             ...base,
-            minHeight: 48,
-            fontSize: 16,
+            minHeight: 44,
+            fontSize: 14,
             borderRadius: 10,
             borderColor: "#feb47b",
             boxShadow: "0 2px 8px #feb47b22",
+            minWidth: "200px",
+            flex: 1,
           }),
           option: (base, state) => ({
             ...base,
-            fontSize: 16,
-            padding: "12px 16px",
+            fontSize: 14,
+            padding: "10px 14px",
             color: state.isSelected ? "#fff" : "#222",
           }),
           menu: (base) => ({

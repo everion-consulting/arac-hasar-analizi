@@ -4,9 +4,10 @@
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   width: 100%;
   box-sizing: border-box;
+  align-items: center;
 }
 
 .parca-secim-row select {
@@ -39,13 +40,14 @@
   background: transparent;
   border: 1px solid #e53935;
   border-radius: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 8px 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
   flex-shrink: 0;
+  min-width: 60px;
 }
 
 .parca-secim-row .btn-remove:hover {
@@ -100,6 +102,12 @@
 }
 
 /* Tablet ve küçük ekranlar için */
+@media (max-width: 968px) {
+  .parca-secim-row {
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 768px) {
   .parca-secim-row {
     flex-direction: column;
