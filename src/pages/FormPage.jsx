@@ -27,6 +27,7 @@ function FormPage({ onNext, onLogout, onShowHistory, editData }) {
     // editData geldiğinde formu doldur
     useEffect(() => {
         if (editData) {
+            console.log('EditData:', editData); // Debug için
             // Araç yaşından model yılını hesapla
             const mevcutYil = new Date().getFullYear();
             const modelYili = editData.arac_yasi ? mevcutYil - editData.arac_yasi : '';
@@ -84,12 +85,12 @@ function FormPage({ onNext, onLogout, onShowHistory, editData }) {
             };
 
             setForm({
-                rayicDeger: editData.rayic_bedel || '',
-                toplamHasar: editData.hasar_bedeli || '',
+                rayicDeger: editData.rayic_bedel ? String(editData.rayic_bedel) : '',
+                toplamHasar: editData.hasar_bedeli ? String(editData.hasar_bedeli) : '',
                 marka: editData.marka || '',
                 model: editData.model || '',
-                km: editData.arac_kilometresi || '',
-                arac_yasi: modelYili || ''
+                km: editData.arac_kilometresi ? String(editData.arac_kilometresi) : '',
+                arac_yasi: modelYili ? String(modelYili) : ''
             });
             setSelectedMarka(editData.marka || '');
             setSelectedModel(editData.model || '');
