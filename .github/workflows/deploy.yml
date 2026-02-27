@@ -3,7 +3,7 @@ name: Araç Hasar Analizi Canlıya Alma (CI/CD)
 on:
   push:
     branches:
-      - main 
+      - master 
 
 jobs:
   deploy:
