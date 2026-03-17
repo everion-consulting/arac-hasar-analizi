@@ -196,7 +196,7 @@ export const MODEL_LISTESI = [
     // Honda
     ...["Jazz e:HEV","City","Civic Sedan","Civic Type R","HR-V e:HEV","ZR-V e:HEV","CR-V e:HEV","PCX125","Dio","Activa 125","Forza 250","Forza 750","X-ADV","Africa Twin","NC750X","Transalp","Gold Wing","CBR Serisi"].map(model=>({marka:"Honda",model})),
     // Hyundai
-    ...["i10","i20","i20 N","i30","Bayon","Kona","Kona Elektrik","Tucson","Santa Fe","Ioniq 5","Ioniq 6","Staria","H-100"].map(model=>({marka:"Hyundai",model})),
+    ...["Accent","i10","i20","i20 N","i30","Bayon","Kona","Kona Elektrik","Tucson","Santa Fe","Ioniq 5","Ioniq 6","Staria","H-100"].map(model=>({marka:"Hyundai",model})),
     // Isuzu
     ...["D-Max","NPR","N-Wide","N-Long","Grand Toro","Novo","Novo Lux","Turquoise","Visigo","Kendo / Interliner","Citiport 12","Citiport 18","Novociti Life","Novociti Volt","Big.e"].map(model=>({marka:"Isuzu",model})),
     // Iveco
