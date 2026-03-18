@@ -181,8 +181,8 @@ export const MODEL_LISTESI = [
     ...["Omoda 5","Omoda 5 Pro","Tiggo 4 Pro","Tiggo 7 Pro","Tiggo 7 Pro Max","Tiggo 8 Pro","Tiggo 8 Pro Max","Tiggo 8 Pro Plug-in Hybrid","Arrizo 8","eQ1","eQ7"].map(model=>({marka:"Chery",model})),
     // Chevrolet
     ...["Spark","Malibu","Camaro","Corvette Stingray","Corvette Z06","Corvette E-Ray","Trax","Trailblazer","Equinox","Equinox EV","Blazer","Blazer EV","Traverse","Tahoe","Suburban","Colorado","Silverado 1500","Silverado HD","Silverado EV","Express Cargo Van","Express Passenger Van"].map(model=>({marka:"Chevrolet",model})),
-    // Citroën
-    ...["Ami","C3","C3 Aircross","C4","C4 X","ë-C4","ë-C4 X","C5 Aircross","C5 X","Berlingo","Berlingo Van","Jumpy Panelvan","Jumpy Spacetourer","Jumper Panelvan","Jumper Minibüs","Jumper Kamyonet"].map(model=>({marka:"Citroën",model})),
+    // Citroen
+    ...["Ami","C3","C3 Plus","C3 Aircross","e-C3","C4","C4 X","e-C4","e-C4 X","C5 Aircross","C5 X","Berlingo","Berlingo Van","e-Berlingo","Jumpy Panelvan","Jumpy Spacetourer","e-Jumpy","Jumper Panelvan","Jumper Minibüs","Jumper Kamyonet","e-Jumper"].map(model=>({marka:"Citroen",model})),
     // Chrysler
     ...["Pacifica","Pacifica Plug-in Hybrid","Voyager","300"].map(model=>({marka:"Chrysler",model})),
     // Cupra
