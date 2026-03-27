@@ -174,3 +174,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+# Oturum süresi: 6 saat (21600 saniye)
+SESSION_COOKIE_AGE = 21600  # 6 saat
+auth_settings = globals()
+auth_settings['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = False

@@ -206,6 +206,10 @@ function FormPage({ onNext, onLogout, onShowHistory, editData }) {
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error('Sunucu hatası');
+            if (response.status === 401 || response.status === 403) {
+                onLogout && onLogout();
+                return;
+            }
             const result = await response.json();
             onNext(result);
         } catch (err) {
