@@ -56,7 +56,7 @@ else:
 
 # CSRF cookie'sinin JavaScript'ten okunabilmesi için (frontend getCsrfToken() kullanıyor)
 CSRF_COOKIE_HTTPONLY = False
-
+ 
 
 # Application definition
 
