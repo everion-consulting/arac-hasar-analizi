@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "import_export",
+    "corsheaders",
     'rest_framework',
     'hasar',
 
@@ -76,6 +77,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -179,3 +181,15 @@ REST_FRAMEWORK = {
 SESSION_COOKIE_AGE = 21600  # 6 saat
 auth_settings = globals()
 auth_settings['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = False
+
+# CORS — sadece bearer tahmin API (hasarlink.com tarayıcı entegrasyonu)
+CORS_ALLOWED_ORIGINS = [
+    "https://www.hasarlink.com",
+    "https://hasarlink.com",
+]
+CORS_URLS_REGEX = r"^/(api/)?predict/bearer$"
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "authorization",
+    "content-type",
+]
