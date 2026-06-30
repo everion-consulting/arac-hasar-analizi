@@ -183,9 +183,12 @@ auth_settings = globals()
 auth_settings['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = False
 
 # CORS — sadece bearer tahmin API (hasarlink.com tarayıcı entegrasyonu)
+# django-cors-headers OPTIONS preflight'ı otomatik yanıtlar.
 CORS_ALLOWED_ORIGINS = [
     "https://www.hasarlink.com",
     "https://hasarlink.com",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 CORS_URLS_REGEX = r"^/(api/)?predict/bearer$"
 CORS_ALLOW_HEADERS = [
